@@ -7,7 +7,7 @@
   <meta name="description" content="Sit the Fuck Down. A small manifesto for cleaner bathrooms." />
   <title>Sit the Fuck Down</title>
   <link rel="icon" href="./favicon.svg?v=23" type="image/svg+xml" />
-  <link rel="stylesheet" href="./styles.css?v=25" />
+  <link rel="stylesheet" href="./styles.css?v=26" />
 </head>
 <body>
   <main class="page" aria-labelledby="title">
@@ -15,11 +15,11 @@
       <div class="hero-top">
         <div class="page-tools">
           <div class="language-menu" id="language-menu">
-            <button class="language-toggle" id="language-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Change language">
+            <button class="language-toggle" id="language-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Change language" data-i18n-aria-label="languageToggleLabel">
               <span id="language-code" aria-hidden="true">EN</span>
               <span class="chevron" aria-hidden="true">⌄</span>
             </button>
-            <div class="language-options" id="language-options" role="menu" aria-label="Language selector">
+            <div class="language-options" id="language-options" role="menu" aria-label="Language selector" data-i18n-aria-label="languageMenuLabel">
               <button type="button" role="menuitem" data-lang="en"><span>EN</span> English</button>
               <button type="button" role="menuitem" data-lang="ro"><span>RO</span> Română</button>
               <button type="button" role="menuitem" data-lang="ru"><span>RU</span> Русский</button>
@@ -105,10 +105,13 @@
       <div>
         <h2 id="qr-title" data-i18n="qrTitle">Print the QR. Begin the reform.</h2>
         <p data-i18n="qrText">Tape this near the throne. Technology, finally doing important work.</p>
-        <a class="qr-link" href="./sitthefuckdown-qr.png" download data-i18n="qrDownload">Download QR code</a>
+        <div class="qr-downloads" role="group" aria-label="QR code downloads" data-i18n-aria-label="qrDownloadsLabel">
+          <a class="qr-link" id="qr-download-png" data-qr-format="png" href="./sitthefuckdown-qr.png" download data-i18n="qrDownload">Download PNG</a>
+          <a class="qr-link qr-link-secondary" id="qr-download-svg" data-qr-format="svg" href="./sitthefuckdown-qr.svg" download data-i18n="qrDownloadSvg">Download SVG</a>
+        </div>
       </div>
-      <a class="qr-frame" href="./sitthefuckdown-qr.png" download aria-label="Download QR code">
-        <img src="./sitthefuckdown-qr.png" alt="QR code for the Sit the Fuck Down website" />
+      <a class="qr-frame" id="qr-preview-link" href="./sitthefuckdown-qr.png" download aria-label="Download the English QR code as a PNG" data-i18n-aria-label="qrPreviewLabel">
+        <img id="qr-image" src="./sitthefuckdown-qr.png" width="984" height="984" loading="lazy" decoding="async" alt="QR code linking to the English version of Sit the Fuck Down" data-i18n-alt="qrImageAlt" />
       </a>
     </section>
 
@@ -123,6 +126,6 @@
     </footer>
   </main>
 
-  <script src="./script.js?v=27"></script>
+  <script src="./script.js?v=28"></script>
 </body>
 </html>

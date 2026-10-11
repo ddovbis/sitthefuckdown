@@ -59,17 +59,30 @@ If a backend is added later, choose its host before publishing DNS changes. An
 `api` subdomain can point to that backend while GitHub Pages continues serving
 the static website.
 
+## Language routes and QR releases
+
+The English QR encodes the canonical root; Romanian, Russian and Hungarian
+encode `/ro`, `/ru` and `/hu`. GitHub Pages redirects those directory requests
+to trailing-slash URLs and serves their committed `index.html` files. Keep the
+generated language directories in the Pages artifact. Run `npm run routes`
+after editing the root HTML template; tests reject stale copies.
+
+Every release check compares all eight QR files and the language pages with
+the selected commit, decodes each PNG's language destination, and checks the
+directory redirects. The browser suite also decodes displayed and downloaded
+PNG/SVG artwork at screen and print raster sizes and exercises direct language
+navigation, refresh and switching. No DNS changes are needed for these routes.
+
 ## Naming and compatibility audit (2026-10-11)
 
 Public branding is **Sit the Fuck Down**; the canonical address remains
-`https://sitthefuckdown.com/`. The repository and local directory intentionally
-retain `stfd`. Earlier printed QR codes use `https://ddovbis.github.io/stfd/`;
-GitHub does not redirect Pages project URLs when a repository is renamed.
-Keeping that permanent redirect avoids breaking printed material or creating
-a second compatibility site. Repository links, the npm package name, subpath
-tests, and the `stfd-language` saved-preference key remain intentional internal
-or compatibility references. The existing local workspace and VPS checkout
-references therefore remain valid.
+`https://sitthefuckdown.com/`. The repository is now
+`https://github.com/ddovbis/sitthefuckdown`. No old QR codes were distributed,
+so the former `https://ddovbis.github.io/stfd/` URL is intentionally retired.
+GitHub redirects old repository links, but not old Pages project URLs. The new
+`https://ddovbis.github.io/sitthefuckdown/` hosting alias is checked instead.
+The saved-preference key `stfd-language` remains for compatibility with existing
+browser storage; temporary test-directory prefixes are internal identifiers.
 
 The audit confirmed Actions deployment, the canonical Pages custom domain,
 HTTPS enforcement, and the expected DNS records. Porkbun lists a legacy

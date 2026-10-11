@@ -4,7 +4,7 @@ import { gzipSync } from 'node:zlib';
 const root = new URL('../public/', import.meta.url);
 let total = 0;
 let compressed = 0;
-for (const name of (await readdir(root)).sort()) {
+for (const name of (await readdir(root, { recursive: true })).sort()) {
   const path = new URL(name, root);
   if (!(await stat(path)).isFile()) continue;
   const contents = await readFile(path);

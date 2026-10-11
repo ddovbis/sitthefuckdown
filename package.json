@@ -1,5 +1,5 @@
 {
-  "name": "stfd",
+  "name": "sitthefuckdown",
   "version": "1.0.0",
   "private": true,
   "description": "Sit the Fuck Down. A multilingual static bathroom manifesto.",
@@ -12,7 +12,8 @@
   "scripts": {
     "export:release": "node scripts/export-release.mjs",
     "start": "node scripts/serve.mjs --host 0.0.0.0 --port 8123",
-    "test": "node --test scripts/verify-live.test.mjs && playwright test",
+    "test": "node scripts/generate-routes.mjs --check && node --test scripts/verify-live.test.mjs && playwright test",
+    "routes": "node scripts/generate-routes.mjs",
     "test:checks": "node --test scripts/verify-live.test.mjs",
     "qr": "node scripts/generate-qr.mjs",
     "size": "node scripts/size.mjs",

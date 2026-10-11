@@ -16,14 +16,26 @@ const contentTypes = {
 export function createStaticServer() {
   return createServer((request, response) => {
     let pathname;
+    let search;
     try {
-      pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+      const requestUrl = new URL(request.url, 'http://localhost');
+      pathname = decodeURIComponent(requestUrl.pathname);
+      search = requestUrl.search;
     } catch {
       response.writeHead(400).end('Bad request');
       return;
     }
 
-    const relativePath = pathname === '/' ? 'index.html' : pathname.slice(1);
+    if (/^\/(ro|ru|hu)$/.test(pathname)) {
+      response.writeHead(301, { Location: `${pathname}/${search}` }).end();
+      return;
+    }
+
+    const relativePath = pathname === '/'
+      ? 'index.html'
+      : pathname.endsWith('/')
+        ? `${pathname.slice(1)}index.html`
+        : pathname.slice(1);
     let filePath = resolve(publicRoot, relativePath);
     if (filePath !== publicRoot && !filePath.startsWith(`${publicRoot}${sep}`)) {
       response.writeHead(403).end('Forbidden');

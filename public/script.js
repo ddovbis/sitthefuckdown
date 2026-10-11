@@ -3,6 +3,8 @@ const translations = {
     lang: 'en',
     documentTitle: 'Sit the Fuck Down',
     languageCode: 'EN',
+    languageToggleLabel: 'Change language',
+    languageMenuLabel: 'Language selector',
     badge: 'Bathroom diplomacy',
     title: 'Sit the Fuck Down',
     subtitle: 'A tiny manifesto for sitting down to pee.',
@@ -32,7 +34,11 @@ const translations = {
     lastImageAlt: 'Toilet cutaway showing a stream through the opening, with droplets beneath the seat magnified.',
     qrTitle: 'Print the QR. Begin the reform.',
     qrText: 'Tape this near the throne. Technology, finally doing important work.',
-    qrDownload: 'Download QR code',
+    qrDownloadsLabel: 'QR code downloads',
+    qrDownload: 'Download PNG',
+    qrDownloadSvg: 'Download SVG',
+    qrPreviewLabel: 'Download the English QR code as a PNG',
+    qrImageAlt: 'QR code linking to the English version of Sit the Fuck Down',
     more: 'Give me another slogan',
     footer: 'Vibe-coded with love, pee(r) pressure, and mild disgust.',
     medical: 'Medical note: healthy people can choose either posture; if peeing is difficult or frequent, talk to a doctor, not a QR code.',
@@ -60,6 +66,8 @@ const translations = {
     lang: 'ro',
     documentTitle: 'Sit the Fuck Down',
     languageCode: 'RO',
+    languageToggleLabel: 'Schimbă limba',
+    languageMenuLabel: 'Selector de limbă',
     badge: 'Pactul de la baie',
     title: 'Sit the Fuck Down',
     subtitle: 'Un mic manifest pentru pipi din șezut și o baie fără stropi.',
@@ -89,7 +97,11 @@ const translations = {
     lastImageAlt: 'Secțiune printr-un vas de toaletă: jetul trece prin deschidere, iar stropii de sub colac sunt măriți.',
     qrTitle: 'Printează QR-ul. Pornește reforma.',
     qrText: 'Lipește-l lângă tron. În sfârșit, tehnologia face ceva util.',
-    qrDownload: 'Descarcă QR-ul',
+    qrDownloadsLabel: 'Descărcări de coduri QR',
+    qrDownload: 'Descarcă PNG-ul',
+    qrDownloadSvg: 'Descarcă SVG-ul',
+    qrPreviewLabel: 'Descarcă în PNG codul QR în limba română',
+    qrImageAlt: 'Cod QR care deschide versiunea în limba română a site-ului Sit the Fuck Down',
     more: 'Mai dă-mi una',
     footer: 'Codat pe vibe, cu dragoste, presiune socială și puțină scârbă constructivă.',
     medical: 'Notă medicală: dacă ești sănătos, alegi cum vrei. Dacă urinezi greu sau prea des, vorbește cu un medic, nu cu un QR.',
@@ -117,6 +129,8 @@ const translations = {
     lang: 'ru',
     documentTitle: 'Sit the Fuck Down',
     languageCode: 'RU',
+    languageToggleLabel: 'Сменить язык',
+    languageMenuLabel: 'Выбор языка',
     badge: 'Дипломатия с унитазом',
     title: 'Sit the Fuck Down',
     subtitle: 'Мини-манифест за сухой пол, чистые носки и спокойную жизнь.',
@@ -146,7 +160,11 @@ const translations = {
     lastImageAlt: 'Разрез унитаза: струя проходит через отверстие, а брызги под сиденьем показаны крупным планом.',
     qrTitle: 'Распечатай QR. Запусти реформу.',
     qrText: 'Повесь рядом с унитазом. Пусть технологии наконец делают что-то полезное.',
-    qrDownload: 'Скачать QR-код',
+    qrDownloadsLabel: 'Скачать QR-коды',
+    qrDownload: 'Скачать PNG',
+    qrDownloadSvg: 'Скачать SVG',
+    qrPreviewLabel: 'Скачать PNG-код QR на русском языке',
+    qrImageAlt: 'QR-код, который открывает русскую версию сайта Sit the Fuck Down',
     more: 'Ещё лозунг',
     footer: 'Написано на вайбе, с любовью, общественным давлением и лёгким бытовым ужасом.',
     medical: 'Медицинская ремарка: если всё ок — делай как удобно. Если мочиться трудно, больно или слишком часто — к врачу, а не к QR-коду.',
@@ -174,6 +192,8 @@ const translations = {
     lang: 'hu',
     documentTitle: 'Sit the Fuck Down',
     languageCode: 'HU',
+    languageToggleLabel: 'Nyelvváltás',
+    languageMenuLabel: 'Nyelvválasztó',
     badge: 'Mosdóetikett, röviden',
     title: 'Sit the Fuck Down',
     subtitle: 'Apró kiáltvány a tiszta padlóért és a békés otthonért.',
@@ -203,7 +223,11 @@ const translations = {
     lastImageAlt: 'A vécé metszete: a sugár a nyíláson át halad, az ülőke alatti cseppek pedig nagyítva látszanak.',
     qrTitle: 'Nyomtasd ki a QR-t. Jöhet a reform.',
     qrText: 'Ragaszd a trón mellé. Végre technológia egy valódi problémára.',
-    qrDownload: 'QR-kód letöltése',
+    qrDownloadsLabel: 'QR-kódok letöltése',
+    qrDownload: 'PNG letöltése',
+    qrDownloadSvg: 'SVG letöltése',
+    qrPreviewLabel: 'Magyar nyelvű QR-kód letöltése PNG formátumban',
+    qrImageAlt: 'QR-kód, amely a Sit the Fuck Down weboldal magyar nyelvű változatát nyitja meg',
     more: 'Még egyet kérek',
     footer: 'Vibe-ból kódolva, szeretettel, társadalmi nyomással és kevés, de hasznos undorral.',
     medical: 'Orvosi megjegyzés: ha minden oké, válaszd, ami kényelmes. Ha nehezen vagy túl gyakran pisilsz, inkább orvost kérdezz, ne egy QR-kódot.',
@@ -238,15 +262,22 @@ const languageMenu = document.querySelector('#language-menu');
 const languageToggle = document.querySelector('#language-toggle');
 const languageCode = document.querySelector('#language-code');
 const languageOptions = document.querySelector('#language-options');
+const qrImage = document.querySelector('#qr-image');
+const qrPreviewLink = document.querySelector('#qr-preview-link');
+const qrPngDownload = document.querySelector('#qr-download-png');
+const qrSvgDownload = document.querySelector('#qr-download-svg');
+const siteRootUrl = new URL('./', document.currentScript.src);
 
-// Storage may be unavailable in privacy-restricted browser contexts.
-let savedLanguage = null;
-try { savedLanguage = localStorage.getItem('stfd-language'); } catch {}
-let currentLang = new URLSearchParams(window.location.search).get('lang') || savedLanguage || 'en';
+function languageFromLocation() {
+  const route = window.location.pathname.match(/(?:^|\/)(ro|ru|hu)(?:\/index\.html)?\/?$/)?.[1];
+  if (route) return route;
+  const requested = new URLSearchParams(window.location.search).get('lang');
+  return Object.hasOwn(translations, requested) ? requested : 'en';
+}
+
+let currentLang = languageFromLocation();
 let index = 0;
 let pledged = false;
-
-if (!translations[currentLang]) currentLang = 'en';
 
 function t() {
   return translations[currentLang];
@@ -271,10 +302,23 @@ function applyLanguage() {
     if (copy[key]) node.alt = copy[key];
   });
 
+  document.querySelectorAll('[data-i18n-aria-label]').forEach((node) => {
+    const key = node.dataset.i18nAriaLabel;
+    if (copy[key]) node.setAttribute('aria-label', copy[key]);
+  });
+
   languageCode.textContent = copy.languageCode;
   languageOptions.querySelectorAll('[data-lang]').forEach((button) => {
     button.classList.toggle('active', button.dataset.lang === currentLang);
   });
+
+  const qrStem = currentLang === 'en' ? 'sitthefuckdown-qr' : `sitthefuckdown-qr-${currentLang}`;
+  const pngUrl = new URL(`${qrStem}.png`, siteRootUrl).href;
+  const svgUrl = new URL(`${qrStem}.svg`, siteRootUrl).href;
+  qrImage.src = pngUrl;
+  qrPreviewLink.href = pngUrl;
+  qrPngDownload.href = pngUrl;
+  qrSvgDownload.href = svgUrl;
 
   pledge.textContent = pledged ? copy.pledgeDone : copy.cta;
   microcopy.textContent = pledged ? copy.pledges[0] : copy.microcopy;
@@ -299,6 +343,27 @@ function nextSlogan() {
   };
 }
 
+function routeBasePath() {
+  const basePath = siteRootUrl.pathname;
+  return basePath.endsWith('/') ? basePath : `${basePath}/`;
+}
+
+function selectLanguage(lang, { updateUrl = false, persist = false } = {}) {
+  currentLang = Object.hasOwn(translations, lang) ? lang : 'en';
+  if (persist) {
+    try { localStorage.setItem('stfd-language', currentLang); } catch {}
+  }
+  pledged = false;
+  languageMenu.classList.remove('open');
+  languageToggle.setAttribute('aria-expanded', 'false');
+  if (updateUrl) {
+    const root = routeBasePath();
+    const route = currentLang === 'en' ? root : `${root}${currentLang}/`;
+    history.pushState({ lang: currentLang }, '', route);
+  }
+  applyLanguage();
+}
+
 more.addEventListener('click', nextSlogan);
 pledge.addEventListener('click', () => {
   const copy = t();
@@ -314,13 +379,10 @@ languageToggle.addEventListener('click', () => {
 languageOptions.addEventListener('click', (event) => {
   const button = event.target.closest('[data-lang]');
   if (!button) return;
-  currentLang = button.dataset.lang;
-  try { localStorage.setItem('stfd-language', currentLang); } catch {}
-  pledged = false;
-  languageMenu.classList.remove('open');
-  languageToggle.setAttribute('aria-expanded', 'false');
-  applyLanguage();
+  selectLanguage(button.dataset.lang, { updateUrl: true, persist: true });
 });
+
+window.addEventListener('popstate', () => selectLanguage(languageFromLocation()));
 
 document.addEventListener('click', (event) => {
   if (languageMenu.contains(event.target)) return;

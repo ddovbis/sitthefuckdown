@@ -5,15 +5,16 @@ Built with plain HTML, CSS and JavaScript, with no framework, backend, analytics
 external fonts, or build step.
 
 **[Visit the website](https://sitthefuckdown.com/)** ·
-[Report a bug or suggest a feature](https://github.com/ddovbis/stfd/issues)
+[Report a bug or suggest a feature](https://github.com/ddovbis/sitthefuckdown/issues)
 
 ## Features
 
 - English, Romanian, Russian and Hungarian translations.
 - Responsive layout with reduced-motion support.
-- Language picker with saved preference and `?lang=en|ro|ru|hu` overrides.
+- Direct English `/`, Romanian `/ro`, Russian `/ru`, and Hungarian `/hu` links.
+- Language picker updates the address, with `?lang=en|ro|ru|hu` compatibility.
 - Interactive pledge button and rotating localized slogans.
-- Downloadable PNG and SVG QR codes linking to the website.
+- Branded PNG and SVG QR codes that open the selected language.
 
 ## Run locally
 
@@ -51,6 +52,7 @@ Useful commands:
 ```sh
 npm run qr
 npm run qr -- https://example.com/ # optional one-off destination override
+npm run routes # regenerate static language pages after changing index.html
 npm run size
 npm run export:release -- --ref HEAD --output outputs/release
 npm run verify:live -- --expected-dir outputs/release/public --output outputs/live-checks.json
@@ -59,9 +61,27 @@ npm run verify:live -- --dns --expected-dir outputs/release/public
 
 The canonical site URL and legacy hosting URLs live in
 [config/site.json](config/site.json). The QR command reads the canonical URL by
-default and regenerates both assets. Its optional URL argument overrides the
-destination for that run. Previously printed codes keep their original
-destination.
+default and regenerates all eight QR assets. The visible label always remains
+`sitthefuckdown.com`; each code encodes its language's URL. Its optional URL
+argument overrides the destination base for that run. Previously printed codes
+keep their original destination.
+
+QR generation uses H error correction, a four-module white quiet zone, and a
+centered domain label. The 984px PNG and scalable SVG downloads are checked at
+224, 300, 600 and 984 pixels. Use the SVG for larger prints; preserve the white
+margin and check a physical proof with your phone before printing a batch.
+Generation uses Playwright Chromium (or installed Chrome/Edge on Windows).
+
+The `/ro`, `/ru` and `/hu` links redirect permanently to static directory pages
+with trailing slashes, so direct navigation and refresh work on GitHub Pages.
+Explicit language paths take priority over saved preferences and query strings;
+the root URL is English unless it has a legacy `?lang=` override. The language
+picker changes the URL as well as the displayed copy and QR downloads.
+
+`public/index.html` is the page template. After editing it, run `npm run routes`
+(Windows: `.\scripts\run.ps1 routes`) to refresh the three language pages.
+Tests reject stale generated pages. Deploy only `public/`, including those
+directories; no server-side routing or production build is needed.
 
 `npm run export:release` exports committed `public/` bytes using local Git,
 including a commit/hash manifest. Choose a new output directory for each export.
@@ -91,4 +111,4 @@ Publish **only `public/`** to any static host. No build step is required.
 
 The [GitHub Pages workflow](.github/workflows/pages.yml) tests pushes to `main`
 and deploys `public/` after the tests pass. Asset paths support hosting under
-`/stfd/`.
+`/sitthefuckdown/`.

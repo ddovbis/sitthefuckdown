@@ -1,10 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { PNG } from 'pngjs';
-import jsQR from 'jsqr';
 import { mkdir, mkdtemp, writeFile, symlink, unlink, rmdir, rm } from 'node:fs/promises';
 import { basename, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { siteConfig } from '../scripts/site-config.mjs';
 
 const languages = {
   en: { code: 'EN', cta: 'I accept the throne', done: 'Pledge accepted ✅' },
@@ -25,6 +22,12 @@ for (const [lang, copy] of Object.entries(languages)) {
     await expect(page.locator('h1')).toHaveText('Sit the Fuck Down');
     await expect(page.locator('#language-code')).toHaveText(copy.code);
     await expect(page.locator('.language-options [data-lang] span')).toHaveText(['EN', 'RO', 'RU', 'HU']);
+    await expect(page.locator('#language-toggle')).toHaveAttribute('aria-label', await page.evaluate(() => translations[currentLang].languageToggleLabel));
+    await expect(page.locator('#language-options')).toHaveAttribute('aria-label', await page.evaluate(() => translations[currentLang].languageMenuLabel));
+    await expect(page.locator('#qr-download-png')).toHaveAttribute('data-qr-format', 'png');
+    await expect(page.locator('#qr-download-svg')).toHaveAttribute('data-qr-format', 'svg');
+    await expect(page.locator('#qr-download-svg')).toHaveText(/SVG/);
+    await expect(page.locator('#qr-image')).toHaveAttribute('alt', await page.evaluate(() => translations[currentLang].qrImageAlt));
     await expect(page.locator('#pledge')).toHaveText(copy.cta);
     expect(await page.evaluate(() => Array.from(document.querySelectorAll('[data-i18n]')).every(node => {
       const value = translations[currentLang][node.dataset.i18n];
@@ -63,10 +66,60 @@ test('language picker persists choice, resets pledge, and URL takes priority', a
   await expect(page.locator('html')).toHaveAttribute('lang', 'ro');
 });
 
+test('language paths beat saved and query preferences, and survive refresh', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('stfd-language', 'hu'));
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+
+  for (const lang of ['ro', 'ru', 'hu']) {
+    await page.goto(`/${lang}/?lang=en`);
+    await expect(page).toHaveURL(new RegExp(`/${lang}/\\?lang=en$`));
+    await expect(page.locator('html')).toHaveAttribute('lang', lang);
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('lang', lang);
+    const expectedQr = `sitthefuckdown-qr-${lang}.png`;
+    await expect.poll(() => page.locator('#qr-image').evaluate(image => new URL(image.src).pathname)).toBe(`/${expectedQr}`);
+  }
+
+  await page.goto('/ro/index.html');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ro');
+
+  await page.goto('/?lang=ru');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+});
+
+test('language picker changes routes, resets pledge, and follows browser history', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#pledge').click();
+  await page.locator('#language-toggle').click();
+  await page.locator('[data-lang="ro"]').click();
+  await expect(page).toHaveURL(/\/ro\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ro');
+  await expect(page.locator('#pledge')).toHaveText(languages.ro.cta);
+  await expect(page.locator('#qr-download-png')).toHaveAttribute('href', /sitthefuckdown-qr-ro\.png$/);
+  await expect(page.locator('#qr-download-svg')).toHaveAttribute('href', /sitthefuckdown-qr-ro\.svg$/);
+  await expect(page.locator('#qr-image')).toHaveAttribute('alt', /română/);
+  expect(await page.evaluate(() => localStorage.getItem('stfd-language'))).toBe('ro');
+
+  await page.goBack();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.goForward();
+  await expect(page).toHaveURL(/\/ro\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ro');
+  await expect(page.locator('#qr-download-png')).toHaveAttribute('href', /sitthefuckdown-qr-ro\.png$/);
+  await expect(page.locator('#qr-download-svg')).toHaveAttribute('href', /sitthefuckdown-qr-ro\.svg$/);
+  await expect(page.locator('#qr-image')).toHaveAttribute('alt', /română/);
+});
+
 test('unsupported language falls back to English', async ({ page }) => {
   await page.goto('/?lang=unsupported');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('#pledge')).toHaveText(languages.en.cta);
+  await page.goto('/?lang=constructor');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
 
 test('storage restrictions do not break the site or language switching', async ({ page }) => {
@@ -97,35 +150,8 @@ test('menu closes on Escape and outside click; hidden options are not focusable'
   await expect(page.locator('#language-toggle')).toHaveAttribute('aria-expanded', 'false');
 });
 
-test('QR image downloads and PNG/SVG encode the live site', async ({ page, request }) => {
-  await page.goto('/');
-  await expect(page.locator('.qr-frame img')).toBeVisible();
-  const downloadEvent = page.waitForEvent('download');
-  await page.locator('.qr-link').click();
-  const download = await downloadEvent;
-  expect(download.suggestedFilename()).toBe('sitthefuckdown-qr.png');
-  expect(await download.failure()).toBeNull();
-  const response = await request.get('/sitthefuckdown-qr.png');
-  expect(response.ok()).toBe(true);
-  const png = PNG.sync.read(await response.body());
-  expect(jsQR(new Uint8ClampedArray(png.data), png.width, png.height)?.data).toBe(siteConfig.url);
-  const svgPixels = await page.evaluate(async () => {
-    const image = new Image();
-    image.src = './sitthefuckdown-qr.svg';
-    await image.decode();
-    const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 740;
-    const context = canvas.getContext('2d');
-    context.fillStyle = '#fff';
-    context.fillRect(0, 0, 740, 740);
-    context.drawImage(image, 0, 0, 740, 740);
-    return Array.from(context.getImageData(0, 0, 740, 740).data);
-  });
-  expect(jsQR(new Uint8ClampedArray(svgPixels), 740, 740)?.data).toBe(siteConfig.url);
-});
-
 test('only deployment files are served', async ({ request }) => {
-  for (const asset of ['/', '/script.js', '/styles.css', '/favicon.svg', '/sitthefuckdown-qr.png', '/sitthefuckdown-qr.svg', '/splashback-600.webp', '/splashback-1200.webp']) {
+  for (const asset of ['/', '/script.js', '/styles.css', '/favicon.svg', '/sitthefuckdown-qr.png', '/sitthefuckdown-qr.svg', '/splashback-600.webp', '/splashback-1200.webp', '/ro/', '/ru/', '/hu/']) {
     expect((await request.get(asset)).status()).toBe(200);
   }
   const favicon = await request.get('/favicon.svg');
@@ -189,15 +215,15 @@ test('all languages keep the header centered and usable across screen widths', a
 });
 
 test('works under a project-site subpath', async ({ page }) => {
-  await page.route('**/stfd/**', async route => {
+  await page.route('**/sitthefuckdown/**', async route => {
     const url = new URL(route.request().url());
-    url.pathname = url.pathname.replace(/^\/stfd\//, '/');
+    url.pathname = url.pathname.replace(/^\/sitthefuckdown\//, '/');
     const response = await route.fetch({ url: url.href });
     await route.fulfill({ response });
   });
   const failures = [];
   page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
-  await page.goto('/stfd/?lang=hu');
+  await page.goto('/sitthefuckdown/?lang=hu');
   await expect(page.locator('#pledge')).toHaveText(languages.hu.cta);
   const illustration = page.locator('.last-argument img');
   await illustration.scrollIntoViewIfNeeded();

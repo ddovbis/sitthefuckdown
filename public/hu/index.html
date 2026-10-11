@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <base href="../" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101827" />
+  <meta name="description" content="Sit the Fuck Down. A small manifesto for cleaner bathrooms." />
+  <title>Sit the Fuck Down</title>
+  <link rel="icon" href="./favicon.svg?v=23" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css?v=26" />
+</head>
+<body>
+  <main class="page" aria-labelledby="title">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="page-tools">
+          <div class="language-menu" id="language-menu">
+            <button class="language-toggle" id="language-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Change language" data-i18n-aria-label="languageToggleLabel">
+              <span id="language-code" aria-hidden="true">EN</span>
+              <span class="chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="language-options" id="language-options" role="menu" aria-label="Language selector" data-i18n-aria-label="languageMenuLabel">
+              <button type="button" role="menuitem" data-lang="en"><span>EN</span> English</button>
+              <button type="button" role="menuitem" data-lang="ro"><span>RO</span> Română</button>
+              <button type="button" role="menuitem" data-lang="ru"><span>RU</span> Русский</button>
+              <button type="button" role="menuitem" data-lang="hu"><span>HU</span> Magyar</button>
+            </div>
+          </div>
+        </div>
+        <div class="badge" data-i18n="badge">Bathroom diplomacy</div>
+      </div>
+
+      <div class="throne" aria-hidden="true">
+        <div class="halo"></div>
+        <div class="toilet">🚽</div>
+        <div class="sparkle s1">✦</div>
+        <div class="sparkle s2">✧</div>
+        <div class="sparkle s3">✦</div>
+      </div>
+
+      <h1 id="title" data-i18n="title">Sit the Fuck Down</h1>
+      <p class="subtitle" data-i18n="subtitle">A tiny manifesto for sitting down to pee.</p>
+
+      <button class="cta" id="pledge" type="button" data-i18n="cta">
+        I accept the throne
+      </button>
+
+      <p class="microcopy" id="microcopy" data-i18n="microcopy">Standing is legal. Sitting is civilized.</p>
+    </section>
+
+    <section class="cards" aria-label="Reasons to sit">
+      <article class="card">
+        <span class="icon">🎯</span>
+        <h2 data-i18n="card1Title">No splash damage</h2>
+        <p data-i18n="card1Text">Your bathroom is not a Jackson Pollock installation. Aim assist: activated.</p>
+      </article>
+
+      <article class="card">
+        <span class="icon">🧘</span>
+        <h2 data-i18n="card2Title">Better chill mode</h2>
+        <p data-i18n="card2Text">For men with urinary symptoms, sitting can help empty the bladder more comfortably.</p>
+      </article>
+
+      <article class="card">
+        <span class="icon" data-i18n="card3Icon">🤝</span>
+        <h2 data-i18n="card3Title">Social contract</h2>
+        <p data-i18n="card3Text">The next person should not need forensic footwear. Be the hero in socks.</p>
+      </article>
+    </section>
+
+    <section class="facts">
+      <h2 data-i18n="factsTitle">The five-second argument</h2>
+      <ul>
+        <li data-i18n="fact1">Cleaner floor.</li>
+        <li data-i18n="fact2">Cleaner seat.</li>
+        <li data-i18n="fact3">Less noise at night.</li>
+        <li data-i18n="fact4">More relaxed posture.</li>
+        <li data-i18n="fact5">Zero masculinity lost. We checked.</li>
+      </ul>
+    </section>
+
+    <section class="last-argument" aria-labelledby="last-title">
+      <div class="last-argument-content">
+        <div class="last-argument-copy">
+          <h2 id="last-title" data-i18n="lastTitle">…And if that’s not enough</h2>
+          <p class="last-lead" data-i18n="lastLead">Your aim can be perfect. The water still splashes.</p>
+          <p data-i18n="lastBody">When pee hits the water, droplets can splash back onto the underside of the seat. Out of sight. Still someone’s problem.</p>
+          <p data-i18n="lastCleanup">Someone has to lift that seat and scrub it off. Not exactly the highlight of their day.</p>
+          <p data-i18n="lastAppeal">If nothing else convinced you, think of the person cleaning it.</p>
+          <p class="last-close"><strong data-i18n="lastClose">Be fucking civil. Sit the fuck down.</strong></p>
+        </div>
+        <figure class="last-argument-figure">
+          <img src="./splashback-1200.webp"
+               srcset="./splashback-600.webp 600w, ./splashback-1200.webp 1200w"
+               sizes="(max-width: 582px) calc(100vw - 64px), (max-width: 800px) 518px, (max-width: 1152px) calc((100vw - 116px) * .46), 477px"
+               width="1200" height="800" loading="lazy" decoding="async"
+               alt="Toilet cutaway showing a stream through the opening, with droplets beneath the seat magnified."
+               data-i18n-alt="lastImageAlt" />
+          <figcaption data-i18n="lastCaption">Great aim. Still a mess.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="qr-card" aria-labelledby="qr-title">
+      <div>
+        <h2 id="qr-title" data-i18n="qrTitle">Print the QR. Begin the reform.</h2>
+        <p data-i18n="qrText">Tape this near the throne. Technology, finally doing important work.</p>
+        <div class="qr-downloads" role="group" aria-label="QR code downloads" data-i18n-aria-label="qrDownloadsLabel">
+          <a class="qr-link" id="qr-download-png" data-qr-format="png" href="./sitthefuckdown-qr.png" download data-i18n="qrDownload">Download PNG</a>
+          <a class="qr-link qr-link-secondary" id="qr-download-svg" data-qr-format="svg" href="./sitthefuckdown-qr.svg" download data-i18n="qrDownloadSvg">Download SVG</a>
+        </div>
+      </div>
+      <a class="qr-frame" id="qr-preview-link" href="./sitthefuckdown-qr.png" download aria-label="Download the English QR code as a PNG" data-i18n-aria-label="qrPreviewLabel">
+        <img id="qr-image" src="./sitthefuckdown-qr.png" width="984" height="984" loading="lazy" decoding="async" alt="QR code linking to the English version of Sit the Fuck Down" data-i18n-alt="qrImageAlt" />
+      </a>
+    </section>
+
+    <section class="quote" aria-live="polite">
+      <p id="line">“Sit the fuck down.”</p>
+      <button class="ghost" id="more" type="button" data-i18n="more">Give me another slogan</button>
+    </section>
+
+    <footer>
+      <p data-i18n="footer">Vibe-coded with love, pee(r) pressure, and mild disgust.</p>
+      <p class="small" data-i18n="medical">Medical note: healthy people can choose either posture; if peeing is difficult or frequent, talk to a doctor, not a QR code.</p>
+    </footer>
+  </main>
+
+  <script src="./script.js?v=28"></script>
+</body>
+</html>

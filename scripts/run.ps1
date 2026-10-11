@@ -1,5 +1,5 @@
 param(
-  [ValidateSet('start', 'test', 'qr', 'size', 'verify', 'export')]
+  [ValidateSet('start', 'test', 'qr', 'routes', 'size', 'verify', 'export')]
   [string] $Task = 'start',
   [Parameter(ValueFromRemainingArguments = $true)]
   [string[]] $TaskArgs = @()
@@ -35,6 +35,8 @@ try {
       $nativeExitCode = $LASTEXITCODE
     }
     'test' {
+      & $node 'scripts/generate-routes.mjs' --check
+      if ($LASTEXITCODE -ne 0) { throw 'Generated language pages are stale. Run the routes task.' }
       if (-not (Test-Path -LiteralPath 'node_modules\playwright\cli.js')) {
         throw 'Install project dependencies first with npm ci.'
       }
@@ -66,6 +68,10 @@ try {
     }
     'size' {
       & $node 'scripts\size.mjs' @TaskArgs
+      $nativeExitCode = $LASTEXITCODE
+    }
+    'routes' {
+      & $node 'scripts/generate-routes.mjs' @TaskArgs
       $nativeExitCode = $LASTEXITCODE
     }
     'verify' {

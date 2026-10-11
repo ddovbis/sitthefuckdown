@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, writeFile, readFile, rm, mkdir } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import QRCode from 'qrcode';
 import { verifyLive } from './verify-live.mjs';
 import { exportRelease } from './export-release.mjs';
@@ -19,13 +19,21 @@ const assets = {
   'sitthefuckdown-qr.png': ['image/png', png],
   'sitthefuckdown-qr.svg': ['image/svg+xml', Buffer.from(await QRCode.toString(site.url, { type: 'svg' }))],
 };
+for (const lang of ['ro', 'ru', 'hu']) {
+  const url = new URL(lang, site.url).href;
+  assets[`${lang}/index.html`] = ['text/html', Buffer.from(`<html lang="${lang}"><h1>Release</h1></html>`)];
+  assets[`sitthefuckdown-qr-${lang}.png`] = ['image/png', await QRCode.toBuffer(url, { width: 200 })];
+  assets[`sitthefuckdown-qr-${lang}.svg`] = ['image/svg+xml', Buffer.from(await QRCode.toString(url, { type: 'svg' }))];
+}
 
 function requestFor({ overrides = {}, redirectStatus = 301, tlsFailure = false } = {}) {
   return async (url, options) => {
     if (tlsFailure && url === 'https://www.example.com/') throw new Error('Certificate hostname mismatch');
     let response;
     if (url.startsWith(site.url)) {
-      const path = new URL(url).pathname.slice(1) || 'index.html';
+      let path = new URL(url).pathname.slice(1) || 'index.html';
+      if (['ro', 'ru', 'hu'].includes(path)) return new Response(null, { status:301, headers:{location:`${url}/`} });
+      if (path.endsWith('/')) path += 'index.html';
       const [type, bytes] = overrides[path] || assets[path] || [];
       response = bytes ? new Response(bytes, { headers: { 'content-type': type } }) : new Response(null, { status: 404 });
     } else if (options.redirect === 'manual') {
@@ -70,10 +78,25 @@ test('rejects a valid QR encoding the wrong domain', async () => {
   assert.match(report.checks.find(check => check.target.endsWith('sitthefuckdown-qr.png')).error, /QR destination mismatch/);
 });
 
+test('rejects a language QR that incorrectly opens English', async () => {
+  const report = await verifyLive({ site, request: requestFor({ overrides: { 'sitthefuckdown-qr-ro.png': ['image/png', png] } }) });
+  assert.equal(report.ok, false);
+  assert.match(report.checks.find(check => check.target.endsWith('sitthefuckdown-qr-ro.png')).error, /QR destination mismatch/);
+});
+
+test('rejects language routes that serve the wrong static language', async () => {
+  const report = await verifyLive({ site, request: requestFor({ overrides: { 'ru/index.html': ['text/html', Buffer.from('<html lang="en">Wrong page</html>')] } }) });
+  assert.equal(report.ok, false);
+  assert.match(report.checks.find(check => check.kind === 'language-route' && check.target.endsWith('/ru')).error, /Incorrect static language/);
+});
+
 test('selected release detects stale assets and missing newly added images', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'stfd-release-check-'));
   try {
-    for (const [path, [, bytes]] of Object.entries(assets)) await writeFile(join(directory, path), bytes);
+    for (const [path, [, bytes]] of Object.entries(assets)) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), bytes);
+    }
     await writeFile(join(directory, 'illustration.webp'), Buffer.from('release image'));
     const report = await verifyLive({ site, expectedDir: directory,
       request: requestFor({ overrides: { 'styles.css': ['text/css', Buffer.from('old release')] } }) });

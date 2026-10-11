@@ -465,6 +465,7 @@ footer {
 
 .qr-link {
   display: inline-flex;
+  align-items: center;
   color: #08111c;
   text-decoration: none;
   font-weight: 900;
@@ -472,9 +473,20 @@ footer {
   border-radius: 999px;
   padding: 12px 16px;
 }
+.qr-link-secondary {
+  color: var(--ink);
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.22);
+}
+.qr-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
 .qr-frame {
-  width: 168px;
+  width: 248px;
+  max-width: 100%;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -534,7 +546,7 @@ footer {
   }
 
   .qr-frame {
-    width: min(220px, 70vw);
+    width: min(248px, 100%);
     transform: rotate(0deg);
   }
 }

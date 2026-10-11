@@ -1,6 +1,6 @@
-# STFD project notes
+# Sit the Fuck Down project notes
 
-- Track project tasks, bugs, and feature proposals in GitHub Issues: https://github.com/ddovbis/stfd/issues (`ddovbis/stfd`).
+- Track project tasks, bugs, and feature proposals in GitHub Issues: https://github.com/ddovbis/sitthefuckdown/issues (`ddovbis/sitthefuckdown`).
 - When asked about open issues, the backlog, priorities, or what remains to do, query the live GitHub tracker and read relevant issue descriptions and comments. Treat GitHub as the source of truth; report issue numbers and links, and distinguish proposals from approved work. If live access is unavailable, say so rather than presenting remembered issue state as current.
 - Before creating an issue, check for an existing one. When working on an issue, reference its number in the resulting PR and update its status only when the requested work is complete.
 

@@ -40,7 +40,11 @@ export async function verifyLive({ site = siteConfig, expectedDir, checkDns = fa
     catch (error) { checks.push({ kind, target, ok: false, error: error.message }); }
   }
 
-  let paths = ['index.html', 'script.js', 'styles.css', 'favicon.svg', 'sitthefuckdown-qr.png', 'sitthefuckdown-qr.svg'];
+  const languages = ['en', 'ro', 'ru', 'hu'];
+  const qrName = lang => `sitthefuckdown-qr${lang === 'en' ? '' : `-${lang}`}`;
+  let paths = ['index.html', 'script.js', 'styles.css', 'favicon.svg',
+    ...languages.flatMap(lang => [`${qrName(lang)}.png`, `${qrName(lang)}.svg`]),
+    ...languages.filter(lang => lang !== 'en').map(lang => `${lang}/index.html`)];
   if (expectedDir) {
     // Check all deployed files, including images added after the initial rollout.
     const files = await releaseFiles(expectedDir);
@@ -66,12 +70,31 @@ export async function verifyLive({ site = siteConfig, expectedDir, checkDns = fa
           throw new Error('Deployed bytes differ from the selected release');
         }
       }
-      if (path === 'sitthefuckdown-qr.png') {
+      const qrLanguage = languages.find(lang => path === `${qrName(lang)}.png`);
+      if (qrLanguage) {
         const png = PNG.sync.read(bytes);
         result.destination = jsQR(new Uint8ClampedArray(png.data), png.width, png.height)?.data;
-        if (result.destination !== base.href) throw new Error(`QR destination mismatch: ${result.destination || '(undecodable)'}`);
+        const expected = new URL(qrLanguage === 'en' ? '' : qrLanguage, base).href;
+        if (result.destination !== expected) throw new Error(`QR destination mismatch: ${result.destination || '(undecodable)'}`);
       }
       return result;
+    });
+  }
+
+  for (const language of languages.filter(lang => lang !== 'en')) {
+    const url = new URL(language, base).href;
+    await check('language-route', url, async () => {
+      const first = await request(url, { redirect: 'manual' });
+      if (![301, 308].includes(first.status) || new URL(first.headers.get('location'), url).href !== `${url}/`) {
+        throw new Error('Language route must permanently redirect to its directory URL');
+      }
+      const page = await request(`${url}/`, { redirect: 'manual' });
+      if (page.status !== 200 || !(page.headers.get('content-type') || '').startsWith('text/html')) {
+        throw new Error(`Language page unavailable: ${page.status}`);
+      }
+      const html = await page.text();
+      if (!html.includes(`lang="${language}"`)) throw new Error('Incorrect static language page');
+      return { status: first.status, final: `${url}/`, language };
     });
   }
 
