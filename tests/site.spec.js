@@ -1,12 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { PNG } from 'pngjs';
 import jsQR from 'jsqr';
+import { mkdir, mkdtemp, writeFile, symlink, unlink, rmdir, rm } from 'node:fs/promises';
+import { basename, join, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const languages = {
-  en: { cta: 'I accept the throne', done: 'Pledge accepted ✅' },
-  ro: { cta: 'Gata, mă așez', done: 'Așa da, civilizat ✅' },
-  ru: { cta: 'Окей, сажусь', done: 'Вот это по-человечески ✅' },
-  hu: { cta: 'Oké, leülök', done: 'Na, ez már kultúra ✅' },
+  en: { code: 'EN', cta: 'I accept the throne', done: 'Pledge accepted ✅' },
+  ro: { code: 'RO', cta: 'Gata, mă așez', done: 'Așa da, civilizat ✅' },
+  ru: { code: 'RU', cta: 'Окей, сажусь', done: 'Вот это по-человечески ✅' },
+  hu: { code: 'HU', cta: 'Oké, leülök', done: 'Na, ez már kultúra ✅' },
 };
 
 for (const [lang, copy] of Object.entries(languages)) {
@@ -20,6 +23,7 @@ for (const [lang, copy] of Object.entries(languages)) {
     await expect(page.locator('html')).toHaveAttribute('lang', lang);
     await expect(page.locator('h1')).toHaveText('STFD.');
     await expect(page.locator('.brand-tagline')).toHaveText('Sit the Fuck Down.');
+    await expect(page.locator('#language-code')).toHaveText(copy.code);
     await expect(page.locator('#pledge')).toHaveText(copy.cta);
     expect(await page.evaluate(() => Array.from(document.querySelectorAll('[data-i18n]')).every(node => {
       const value = translations[currentLang][node.dataset.i18n];
@@ -116,23 +120,64 @@ test('QR image downloads and PNG/SVG encode the live site', async ({ page, reque
 });
 
 test('only deployment files are served', async ({ request }) => {
-  for (const asset of ['/', '/script.js', '/styles.css', '/stfd-qr.png', '/stfd-qr.svg']) {
+  for (const asset of ['/', '/script.js', '/styles.css', '/favicon.svg', '/stfd-qr.png', '/stfd-qr.svg']) {
     expect((await request.get(asset)).status()).toBe(200);
   }
+  const favicon = await request.get('/favicon.svg');
+  expect(favicon.headers()['content-type']).toContain('image/svg+xml');
+  expect(await favicon.text()).toContain('🚽');
   for (const privatePath of ['/.git/config', '/README.MD', '/package.json', '/tests/site.spec.js']) {
     expect((await request.get(privatePath)).status()).toBe(404);
   }
 });
 
-test('all languages fit narrow 320px screens', async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 720 });
-  for (const lang of Object.keys(languages)) {
-    await page.goto(`/?lang=${lang}`);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    for (const selector of ['h1', '.hero-top', '.qr-card', '#pledge']) {
-      const box = await page.locator(selector).boundingBox();
-      expect(box.x).toBeGreaterThanOrEqual(0);
-      expect(box.x + box.width).toBeLessThanOrEqual(321);
+test('preview rejects links to files outside public', async ({ request }) => {
+  const temporaryRoot = resolve(fileURLToPath(new URL('../.playwright-tmp/', import.meta.url)));
+  const publicRoot = resolve(fileURLToPath(new URL('../public/', import.meta.url)));
+  await mkdir(temporaryRoot, { recursive: true });
+  const privateDirectory = await mkdtemp(join(temporaryRoot, 'serve-boundary-'));
+  const publicLink = join(publicRoot, basename(privateDirectory));
+  let linkCreated = false;
+  try {
+    await writeFile(join(privateDirectory, 'private.txt'), 'Not a deployment asset');
+    await symlink(privateDirectory, publicLink, process.platform === 'win32' ? 'junction' : 'dir');
+    linkCreated = true;
+    expect((await request.get(`/${basename(publicLink)}/private.txt`)).status()).toBe(403);
+  } finally {
+    if (linkCreated) {
+      expect(resolve(publicLink).startsWith(`${publicRoot}${sep}`)).toBe(true);
+      if (process.platform === 'win32') await rmdir(publicLink);
+      else await unlink(publicLink);
+    }
+    expect(resolve(privateDirectory).startsWith(`${temporaryRoot}${sep}`)).toBe(true);
+    await rm(privateDirectory, { recursive: true, force: true });
+  }
+});
+
+test('all languages keep the header centered and usable across screen widths', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const width of [320, 390, 800, 801]) {
+    await page.setViewportSize({ width, height: 720 });
+    for (const lang of Object.keys(languages)) {
+      await page.goto(`/?lang=${lang}`);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+      for (const selector of ['h1', '.hero-top', '.qr-card', '#pledge']) {
+        const box = await page.locator(selector).boundingBox();
+        expect(box.x).toBeGreaterThanOrEqual(0);
+        expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
+      }
+      const badge = await page.locator('.badge').boundingBox();
+      const toilet = await page.locator('.toilet').boundingBox();
+      const toggle = await page.locator('#language-toggle').boundingBox();
+      expect(Math.abs(badge.x + badge.width / 2 - width / 2)).toBeLessThan(1);
+      expect(Math.abs(toilet.x + toilet.width / 2 - width / 2)).toBeLessThan(1);
+      expect(Math.abs(badge.y + badge.height / 2 - toggle.y - toggle.height / 2)).toBeLessThan(1);
+      expect(toggle.x - badge.x - badge.width).toBeGreaterThanOrEqual(8);
+      await page.locator('#language-toggle').click();
+      await expect(page.locator('#language-options')).toBeVisible();
+      const menu = await page.locator('#language-options').boundingBox();
+      expect(menu.x).toBeGreaterThanOrEqual(0);
+      expect(menu.x + menu.width).toBeLessThanOrEqual(width + 1);
     }
   }
 });
@@ -150,5 +195,11 @@ test('works under a project-site subpath', async ({ page }) => {
   await expect(page.locator('#pledge')).toHaveText(languages.hu.cta);
   await expect(page.locator('.qr-frame img')).toBeVisible();
   expect(await page.locator('.qr-frame img').evaluate(image => image.naturalWidth > 0)).toBe(true);
+  expect(await page.locator('link[rel="icon"]').evaluate(async link => {
+    const image = new Image();
+    image.src = link.href;
+    await image.decode();
+    return image.naturalWidth > 0 && image.naturalHeight > 0;
+  })).toBe(true);
   expect(failures).toEqual([]);
 });

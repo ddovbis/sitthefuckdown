@@ -5,7 +5,7 @@
   "description": "STFD — Sit the Fuck Down. A multilingual static bathroom manifesto.",
   "type": "module",
   "scripts": {
-    "start": "python3 -m http.server 8123 --bind 0.0.0.0 --directory public",
+    "start": "node scripts/serve.mjs --host 0.0.0.0 --port 8123",
     "test": "playwright test",
     "qr": "node scripts/generate-qr.mjs",
     "size": "node scripts/size.mjs"

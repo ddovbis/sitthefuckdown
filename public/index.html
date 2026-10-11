@@ -6,26 +6,28 @@
   <meta name="theme-color" content="#101827" />
   <meta name="description" content="STFD — Sit the Fuck Down. A small manifesto for cleaner bathrooms." />
   <title>STFD — Sit the Fuck Down</title>
-  <link rel="icon" href="./stfd-qr.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./styles.css?v=19" />
+  <link rel="icon" href="./favicon.svg?v=23" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css?v=23" />
 </head>
 <body>
   <main class="page" aria-labelledby="title">
     <section class="hero">
       <div class="hero-top">
-        <div class="badge" data-i18n="badge">🚽 Bathroom diplomacy</div>
-        <div class="language-menu" id="language-menu">
-          <button class="language-toggle" id="language-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Change language">
-            <span id="language-flag" aria-hidden="true">🇬🇧</span>
-            <span class="chevron" aria-hidden="true">⌄</span>
-          </button>
-          <div class="language-options" id="language-options" role="menu" aria-label="Language selector">
-            <button type="button" role="menuitem" data-lang="en"><span>🇬🇧</span> English</button>
-            <button type="button" role="menuitem" data-lang="ro"><span>🇷🇴</span> Română</button>
-            <button type="button" role="menuitem" data-lang="ru"><span>🇷🇺</span> Русский</button>
-            <button type="button" role="menuitem" data-lang="hu"><span>🇭🇺</span> Magyar</button>
+        <div class="page-tools">
+          <div class="language-menu" id="language-menu">
+            <button class="language-toggle" id="language-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Change language">
+              <span id="language-code" aria-hidden="true">EN</span>
+              <span class="chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="language-options" id="language-options" role="menu" aria-label="Language selector">
+              <button type="button" role="menuitem" data-lang="en"><span>🇬🇧</span> English</button>
+              <button type="button" role="menuitem" data-lang="ro"><span>🇷🇴</span> Română</button>
+              <button type="button" role="menuitem" data-lang="ru"><span>🇷🇺</span> Русский</button>
+              <button type="button" role="menuitem" data-lang="hu"><span>🇭🇺</span> Magyar</button>
+            </div>
           </div>
         </div>
+        <div class="badge" data-i18n="badge">Bathroom diplomacy</div>
       </div>
 
       <div class="throne" aria-hidden="true">
@@ -61,7 +63,7 @@
       </article>
 
       <article class="card">
-        <span class="icon">🤝</span>
+        <span class="icon" data-i18n="card3Icon">🤝</span>
         <h2 data-i18n="card3Title">Social contract</h2>
         <p data-i18n="card3Text">The next person should not need forensic footwear. Be the hero in socks.</p>
       </article>
@@ -95,11 +97,11 @@
     </section>
 
     <footer>
-      <p data-i18n="footer">Vibe-coded with love, peer pressure, and mild disgust.</p>
+      <p data-i18n="footer">Vibe-coded with love, pee(r) pressure, and mild disgust.</p>
       <p class="small" data-i18n="medical">Medical note: healthy people can choose either posture; if peeing is difficult or frequent, talk to a doctor, not a QR code.</p>
     </footer>
   </main>
 
-  <script src="./script.js?v=19"></script>
+  <script src="./script.js?v=25"></script>
 </body>
 </html>

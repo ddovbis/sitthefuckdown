@@ -2,8 +2,8 @@ const translations = {
   en: {
     lang: 'en',
     documentTitle: 'STFD — Sit the Fuck Down',
-    flag: '🇬🇧',
-    badge: '🚽 Bathroom diplomacy',
+    languageCode: 'EN',
+    badge: 'Bathroom diplomacy',
     title: 'STFD.',
     subtitle: 'A tiny manifesto for sitting down to pee.',
     cta: 'I accept the throne',
@@ -13,6 +13,7 @@ const translations = {
     card1Text: 'Your bathroom is not a Jackson Pollock installation. Aim assist: activated.',
     card2Title: 'Better chill mode',
     card2Text: 'For men with urinary symptoms, sitting can help empty the bladder more comfortably.',
+    card3Icon: '🤝',
     card3Title: 'Social contract',
     card3Text: 'The next person should not need forensic footwear. Be the hero in socks.',
     factsTitle: 'The five-second argument',
@@ -25,7 +26,7 @@ const translations = {
     qrText: 'Tape this near the throne. Technology, finally doing important work.',
     qrDownload: 'Download QR code',
     more: 'Give me another slogan',
-    footer: 'Vibe-coded with love, peer pressure, and mild disgust.',
+    footer: 'Vibe-coded with love, pee(r) pressure, and mild disgust.',
     medical: 'Medical note: healthy people can choose either posture; if peeing is difficult or frequent, talk to a doctor, not a QR code.',
     slogans: [
       'Sit the fuck down.',
@@ -50,8 +51,8 @@ const translations = {
   ro: {
     lang: 'ro',
     documentTitle: 'STFD — Sit the Fuck Down',
-    flag: '🇷🇴',
-    badge: '🚽 Pactul de la baie',
+    languageCode: 'RO',
+    badge: 'Pactul de la baie',
     title: 'STFD.',
     subtitle: 'Un mic manifest pentru pipi din șezut și o baie fără stropi.',
     cta: 'Gata, mă așez',
@@ -61,7 +62,8 @@ const translations = {
     card1Text: 'Baia nu e poligon. Ia loc și scade drama de pe gresie.',
     card2Title: 'Mai relaxat, mai simplu',
     card2Text: 'Dacă ai simptome urinare, statul jos poate fi mai confortabil. În rest: bun-simț și mai puțin mop.',
-    card3Title: 'Fii om fin',
+    card3Icon: '🤵',
+    card3Title: 'Fii și tu mai finuț',
     card3Text: 'Următorul nu trebuie să citească urme pe gresie. Șosetele merită respect.',
     factsTitle: 'Pe scurt',
     fact1: 'Podea mai curată.',
@@ -98,8 +100,8 @@ const translations = {
   ru: {
     lang: 'ru',
     documentTitle: 'STFD — Sit the Fuck Down',
-    flag: '🇷🇺',
-    badge: '🚽 Дипломатия с унитазом',
+    languageCode: 'RU',
+    badge: 'Дипломатия с унитазом',
     title: 'STFD.',
     subtitle: 'Мини-манифест за сухой пол, чистые носки и спокойную жизнь.',
     cta: 'Окей, сажусь',
@@ -109,6 +111,7 @@ const translations = {
     card1Text: 'Унитаз — не тир. Сядешь — и пол не будет собирать улики.',
     card2Title: 'Телу тоже проще',
     card2Text: 'Если струя слабая или приходится напрягаться, сидя часто удобнее. А если так регулярно — лучше к врачу.',
+    card3Icon: '🤝',
     card3Title: 'Подумай о следующем',
     card3Text: 'Никто не хочет заходить сюда с видом криминалиста. Оставь после себя сухо.',
     factsTitle: 'Пять быстрых аргументов',
@@ -146,8 +149,8 @@ const translations = {
   hu: {
     lang: 'hu',
     documentTitle: 'STFD — Sit the Fuck Down',
-    flag: '🇭🇺',
-    badge: '🚽 Mosdóetikett, röviden',
+    languageCode: 'HU',
+    badge: 'Mosdóetikett, röviden',
     title: 'STFD.',
     subtitle: 'Apró kiáltvány a tiszta padlóért és a békés otthonért.',
     cta: 'Oké, leülök',
@@ -157,6 +160,7 @@ const translations = {
     card1Text: 'A vécé nem céllövölde. Ülj le, és a padló végre kimarad a történetből.',
     card2Title: 'Kényelmesebb is lehet',
     card2Text: 'Ha nehezebben megy a pisilés, ülve néha lazább és könnyebb lehet.',
+    card3Icon: '🤝',
     card3Title: 'Gondolj a következőre',
     card3Text: 'Aki utánad jön, nem bűnügyi helyszínre vágyik. Kíméld meg a padlót.',
     factsTitle: 'Öt másodpercben',
@@ -200,7 +204,7 @@ const pledge = document.querySelector('#pledge');
 const microcopy = document.querySelector('#microcopy');
 const languageMenu = document.querySelector('#language-menu');
 const languageToggle = document.querySelector('#language-toggle');
-const languageFlag = document.querySelector('#language-flag');
+const languageCode = document.querySelector('#language-code');
 const languageOptions = document.querySelector('#language-options');
 
 // Storage may be unavailable in privacy-restricted browser contexts.
@@ -230,7 +234,7 @@ function applyLanguage() {
     if (copy[key]) node.textContent = copy[key];
   });
 
-  languageFlag.textContent = copy.flag;
+  languageCode.textContent = copy.languageCode;
   languageOptions.querySelectorAll('[data-lang]').forEach((button) => {
     button.classList.toggle('active', button.dataset.lang === currentLang);
   });
