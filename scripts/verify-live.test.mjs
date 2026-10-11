@@ -16,8 +16,8 @@ const assets = {
   'script.js': ['text/javascript', Buffer.from('console.log("release")')],
   'styles.css': ['text/css', Buffer.from('body { color: black; }')],
   'favicon.svg': ['image/svg+xml', Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"/>')],
-  'stfd-qr.png': ['image/png', png],
-  'stfd-qr.svg': ['image/svg+xml', Buffer.from(await QRCode.toString(site.url, { type: 'svg' }))],
+  'sitthefuckdown-qr.png': ['image/png', png],
+  'sitthefuckdown-qr.svg': ['image/svg+xml', Buffer.from(await QRCode.toString(site.url, { type: 'svg' }))],
 };
 
 function requestFor({ overrides = {}, redirectStatus = 301, tlsFailure = false } = {}) {
@@ -65,9 +65,9 @@ test('rejects HTML served in place of JavaScript', async () => {
 
 test('rejects a valid QR encoding the wrong domain', async () => {
   const wrong = await QRCode.toBuffer('https://wrong.example/', { width: 200 });
-  const report = await verifyLive({ site, request: requestFor({ overrides: { 'stfd-qr.png': ['image/png', wrong] } }) });
+  const report = await verifyLive({ site, request: requestFor({ overrides: { 'sitthefuckdown-qr.png': ['image/png', wrong] } }) });
   assert.equal(report.ok, false);
-  assert.match(report.checks.find(check => check.target.endsWith('stfd-qr.png')).error, /QR destination mismatch/);
+  assert.match(report.checks.find(check => check.target.endsWith('sitthefuckdown-qr.png')).error, /QR destination mismatch/);
 });
 
 test('selected release detects stale assets and missing newly added images', async () => {

@@ -2,7 +2,7 @@
   "name": "stfd",
   "version": "1.0.0",
   "private": true,
-  "description": "STFD — Sit the Fuck Down. A multilingual static bathroom manifesto.",
+  "description": "Sit the Fuck Down. A multilingual static bathroom manifesto.",
   "type": "module",
   "packageManager": "npm@11.21.0",
   "engines": {

@@ -8,6 +8,6 @@ if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password)
   throw new Error('Use an HTTP(S) site URL without credentials.');
 }
 const options = { errorCorrectionLevel: 'M', margin: 4, width: 740 };
-await QRCode.toFile(fileURLToPath(new URL('../public/stfd-qr.png', import.meta.url)), url.href, options);
-await writeFile(new URL('../public/stfd-qr.svg', import.meta.url), await QRCode.toString(url.href, { ...options, type: 'svg' }));
-console.log(`STFD QR assets point to ${url.href}`);
+await QRCode.toFile(fileURLToPath(new URL('../public/sitthefuckdown-qr.png', import.meta.url)), url.href, options);
+await writeFile(new URL('../public/sitthefuckdown-qr.svg', import.meta.url), await QRCode.toString(url.href, { ...options, type: 'svg' }));
+console.log(`Sit the Fuck Down QR assets point to ${url.href}`);

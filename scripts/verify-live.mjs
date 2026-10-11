@@ -40,11 +40,11 @@ export async function verifyLive({ site = siteConfig, expectedDir, checkDns = fa
     catch (error) { checks.push({ kind, target, ok: false, error: error.message }); }
   }
 
-  let paths = ['index.html', 'script.js', 'styles.css', 'favicon.svg', 'stfd-qr.png', 'stfd-qr.svg'];
+  let paths = ['index.html', 'script.js', 'styles.css', 'favicon.svg', 'sitthefuckdown-qr.png', 'sitthefuckdown-qr.svg'];
   if (expectedDir) {
     // Check all deployed files, including images added after the initial rollout.
     const files = await releaseFiles(expectedDir);
-    if (!files.includes('index.html') || !files.includes('stfd-qr.png') || !files.includes('stfd-qr.svg')) {
+    if (!files.includes('index.html') || !files.includes('sitthefuckdown-qr.png') || !files.includes('sitthefuckdown-qr.svg')) {
       throw new Error('--expected-dir must contain the release index.html and both QR assets.');
     }
     paths = [...new Set([...paths, ...files])];
@@ -66,7 +66,7 @@ export async function verifyLive({ site = siteConfig, expectedDir, checkDns = fa
           throw new Error('Deployed bytes differ from the selected release');
         }
       }
-      if (path === 'stfd-qr.png') {
+      if (path === 'sitthefuckdown-qr.png') {
         const png = PNG.sync.read(bytes);
         result.destination = jsQR(new Uint8ClampedArray(png.data), png.width, png.height)?.data;
         if (result.destination !== base.href) throw new Error(`QR destination mismatch: ${result.destination || '(undecodable)'}`);

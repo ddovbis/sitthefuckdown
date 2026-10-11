@@ -1,4 +1,4 @@
-# STFD — Sit the Fuck Down
+# Sit the Fuck Down
 
 A tiny, multilingual bathroom manifesto encouraging visitors to sit down to pee.
 Built with plain HTML, CSS and JavaScript, with no framework, backend, analytics,

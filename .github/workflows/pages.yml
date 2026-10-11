@@ -1,4 +1,4 @@
-name: Test and deploy STFD to GitHub Pages
+name: Test and deploy Sit the Fuck Down to GitHub Pages
 
 on:
   push:

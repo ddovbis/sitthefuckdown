@@ -20,11 +20,11 @@ for (const [lang, copy] of Object.entries(languages)) {
     const failures = [];
     page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
     await page.goto(`/?lang=${lang}`);
-    await expect(page).toHaveTitle('STFD — Sit the Fuck Down');
+    await expect(page).toHaveTitle('Sit the Fuck Down');
     await expect(page.locator('html')).toHaveAttribute('lang', lang);
-    await expect(page.locator('h1')).toHaveText('STFD.');
-    await expect(page.locator('.brand-tagline')).toHaveText('Sit the Fuck Down.');
+    await expect(page.locator('h1')).toHaveText('Sit the Fuck Down');
     await expect(page.locator('#language-code')).toHaveText(copy.code);
+    await expect(page.locator('.language-options [data-lang] span')).toHaveText(['EN', 'RO', 'RU', 'HU']);
     await expect(page.locator('#pledge')).toHaveText(copy.cta);
     expect(await page.evaluate(() => Array.from(document.querySelectorAll('[data-i18n]')).every(node => {
       const value = translations[currentLang][node.dataset.i18n];
@@ -103,15 +103,15 @@ test('QR image downloads and PNG/SVG encode the live site', async ({ page, reque
   const downloadEvent = page.waitForEvent('download');
   await page.locator('.qr-link').click();
   const download = await downloadEvent;
-  expect(download.suggestedFilename()).toBe('stfd-qr.png');
+  expect(download.suggestedFilename()).toBe('sitthefuckdown-qr.png');
   expect(await download.failure()).toBeNull();
-  const response = await request.get('/stfd-qr.png');
+  const response = await request.get('/sitthefuckdown-qr.png');
   expect(response.ok()).toBe(true);
   const png = PNG.sync.read(await response.body());
   expect(jsQR(new Uint8ClampedArray(png.data), png.width, png.height)?.data).toBe(siteConfig.url);
   const svgPixels = await page.evaluate(async () => {
     const image = new Image();
-    image.src = './stfd-qr.svg';
+    image.src = './sitthefuckdown-qr.svg';
     await image.decode();
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = 740;
@@ -125,7 +125,7 @@ test('QR image downloads and PNG/SVG encode the live site', async ({ page, reque
 });
 
 test('only deployment files are served', async ({ request }) => {
-  for (const asset of ['/', '/script.js', '/styles.css', '/favicon.svg', '/stfd-qr.png', '/stfd-qr.svg', '/splashback-600.webp', '/splashback-1200.webp']) {
+  for (const asset of ['/', '/script.js', '/styles.css', '/favicon.svg', '/sitthefuckdown-qr.png', '/sitthefuckdown-qr.svg', '/splashback-600.webp', '/splashback-1200.webp']) {
     expect((await request.get(asset)).status()).toBe(200);
   }
   const favicon = await request.get('/favicon.svg');

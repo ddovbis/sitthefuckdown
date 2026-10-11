@@ -59,6 +59,26 @@ If a backend is added later, choose its host before publishing DNS changes. An
 `api` subdomain can point to that backend while GitHub Pages continues serving
 the static website.
 
+## Naming and compatibility audit (2026-10-11)
+
+Public branding is **Sit the Fuck Down**; the canonical address remains
+`https://sitthefuckdown.com/`. The repository and local directory intentionally
+retain `stfd`. Earlier printed QR codes use `https://ddovbis.github.io/stfd/`;
+GitHub does not redirect Pages project URLs when a repository is renamed.
+Keeping that permanent redirect avoids breaking printed material or creating
+a second compatibility site. Repository links, the npm package name, subpath
+tests, and the `stfd-language` saved-preference key remain intentional internal
+or compatibility references. The existing local workspace and VPS checkout
+references therefore remain valid.
+
+The audit confirmed Actions deployment, the canonical Pages custom domain,
+HTTPS enforcement, and the expected DNS records. Porkbun lists a legacy
+parking forward to `http://sitthefuckdown-com.l.ink`, but public DNS routes
+traffic directly to GitHub Pages; that inactive setting is not a deployment
+dependency. No DNS or forwarding records were changed.
+
+See [GitHub's repository rename behavior](https://docs.github.com/en/repositories/creating-and-managing-repositories/renaming-a-repository).
+
 ## References
 
 - [GitHub Pages: managing a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
