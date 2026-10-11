@@ -52,6 +52,16 @@ for (const [lang, copy] of Object.entries(languages)) {
   });
 }
 
+test('owner-reviewed Romanian and Russian wording is preserved', async ({ page }) => {
+  await page.goto('/ro/');
+  await expect(page.locator('#line')).toHaveText('“Așază-te jos, ține standardele sus.”');
+  await expect(page.locator('#last-title')).toHaveText('…Și dacă nici asta nu te-a convins');
+  await expect(page.locator('.last-close')).toHaveText('Fii civilizat. Sit the fuck down.');
+  await page.goto('/ru/');
+  await expect(page.locator('.last-close')).toHaveText('Будь, блять, человеком и сядь.');
+  await expect(page.locator('[data-i18n="medical"]')).toHaveText('Медицинская ремарка: если мочиться трудно, больно или слишком часто — сходи к врачу, а не к QR-коду.');
+});
+
 test('language picker persists choice, resets pledge, and URL takes priority', async ({ page }) => {
   await page.goto('/');
   await page.locator('#pledge').click();
