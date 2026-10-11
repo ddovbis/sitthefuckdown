@@ -74,17 +74,40 @@ test('source sentence and hyphenated words stay together across responsive width
     for (const lang of Object.keys(languages)) {
       await page.goto(`/?lang=${lang}`);
       const source = page.locator('.source-reference');
-      const geometry = await source.evaluate(node => {
+      const measureSource = node => {
         const range = document.createRange();
         range.selectNodeContents(node);
         const tops = [...range.getClientRects()].filter(r => r.width > 0).map(r => r.top);
+        const prefix = node.querySelector('[data-i18n="contribution"]').firstChild;
+        const lastWord = document.createRange();
+        lastWord.setStart(prefix, prefix.textContent.lastIndexOf(' ') + 1);
+        lastWord.setEnd(prefix, prefix.textContent.length);
+        const linkText = document.createRange();
+        linkText.selectNodeContents(node.querySelector('a'));
         const box = node.getBoundingClientRect();
-        return { lineSpread: Math.max(...tops) - Math.min(...tops), left: box.left, right: box.right };
-      });
-      expect(geometry.lineSpread, `${lang} source sentence at ${width}px`).toBeLessThan(2);
+        return {
+          lineSpread: Math.max(...tops) - Math.min(...tops),
+          lineHeight: parseFloat(getComputedStyle(node).lineHeight),
+          linkSeparation: Math.abs(lastWord.getBoundingClientRect().top - linkText.getBoundingClientRect().top),
+          left: box.left, right: box.right,
+        };
+      };
+      const geometry = await source.evaluate(measureSource);
+      // English can use two balanced lines with wider system fonts on narrow screens.
+      // The shorter translations and the words immediately before GitHub stay together.
+      expect(geometry.lineSpread, `${lang} source sentence at ${width}px`).toBeLessThan(lang === 'en' ? geometry.lineHeight + 2 : 2);
+      expect(geometry.linkSeparation, `${lang} orphaned GitHub at ${width}px`).toBeLessThan(2);
       expect(geometry.left).toBeGreaterThanOrEqual(0);
       expect(geometry.right).toBeLessThanOrEqual(width);
       await expect(source.locator('a')).toHaveText('GitHub');
+      if (lang === 'en' && width === 320) {
+        await page.locator('.contribution').evaluate(node => { node.style.fontFamily = 'Verdana, sans-serif'; });
+        const fallback = await source.evaluate(measureSource);
+        expect(fallback.lineSpread).toBeLessThan(fallback.lineHeight + 2);
+        expect(fallback.linkSeparation).toBeLessThan(2);
+        expect(fallback.left).toBeGreaterThanOrEqual(0);
+        expect(fallback.right).toBeLessThanOrEqual(width);
+      }
       for (const [selector, word] of wordsToKeep[lang]) {
         const lineSpread = await page.locator(selector).evaluate((node, text) => {
           const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
