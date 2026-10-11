@@ -286,6 +286,10 @@ footer {
   padding: 26px 10px 0;
 }
 .small { font-size: .88rem; max-width: 720px; margin: 8px auto 0; }
+.contribution { max-width: 720px; margin: 12px auto; }
+.contribution a { color: var(--cyan); text-underline-offset: .2em; overflow-wrap: anywhere; }
+.contribution a:hover { color: var(--mint); }
+.contribution a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; border-radius: 2px; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes float { 50% { transform: translateY(-8px); } }

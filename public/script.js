@@ -41,6 +41,7 @@ const translations = {
     qrImageAlt: 'QR code linking to the English version of Sit the Fuck Down',
     more: 'Give me another slogan',
     footer: 'Vibe-coded with love, pee(r) pressure, and mild disgust.',
+    contribution: 'Source on GitHub — contributions welcome:',
     medical: 'Medical note: healthy people can choose either posture; if peeing is difficult or frequent, talk to a doctor, not a QR code.',
     slogans: [
       'Sit the fuck down.',
@@ -104,6 +105,7 @@ const translations = {
     qrImageAlt: 'Cod QR care deschide versiunea în limba română a site-ului Sit the Fuck Down',
     more: 'Mai dă-mi una',
     footer: 'Codat pe vibe, cu dragoste, presiune socială și puțină scârbă constructivă.',
+    contribution: 'Codul e pe GitHub — contribuțiile sunt binevenite:',
     medical: 'Notă medicală: dacă ești sănătos, alegi cum vrei. Dacă urinezi greu sau prea des, vorbește cu un medic, nu cu un QR.',
     slogans: [
       'Ia loc jos. Ține standardele sus.',
@@ -167,6 +169,7 @@ const translations = {
     qrImageAlt: 'QR-код, который открывает русскую версию сайта Sit the Fuck Down',
     more: 'Ещё лозунг',
     footer: 'Написано на вайбе, с любовью, общественным давлением и лёгким бытовым ужасом.',
+    contribution: 'Код на GitHub — будем рады твоему участию:',
     medical: 'Медицинская ремарка: если всё ок — делай как удобно. Если мочиться трудно, больно или слишком часто — к врачу, а не к QR-коду.',
     slogans: [
       'Сел — и все выдохнули.',
@@ -230,6 +233,7 @@ const translations = {
     qrImageAlt: 'QR-kód, amely a Sit the Fuck Down weboldal magyar nyelvű változatát nyitja meg',
     more: 'Még egyet kérek',
     footer: 'Vibe-ból kódolva, szeretettel, társadalmi nyomással és kevés, de hasznos undorral.',
+    contribution: 'A forráskód a GitHubon van — szívesen fogadjuk a hozzájárulásokat:',
     medical: 'Orvosi megjegyzés: ha minden oké, válaszd, ami kényelmes. Ha nehezen vagy túl gyakran pisilsz, inkább orvost kérdezz, ne egy QR-kódot.',
     slogans: [
       'Ülj le. Ennyi a mutatvány.',
