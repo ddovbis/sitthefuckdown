@@ -1,5 +1,5 @@
 param(
-  [ValidateSet('start', 'test', 'qr', 'size')]
+  [ValidateSet('start', 'test', 'qr', 'size', 'verify')]
   [string] $Task = 'start',
   [Parameter(ValueFromRemainingArguments = $true)]
   [string[]] $TaskArgs = @()
@@ -17,7 +17,14 @@ $node = if ($nodeCommand) { $nodeCommand.Source } else {
 }
 
 if (-not (Test-Path -LiteralPath $node)) {
-  throw 'Node.js 20+ is required. Install Node.js or make the bundled Codex Node runtime available.'
+  throw 'Node.js 24 LTS (24.19.0 or newer in 24.x) is required. Follow the project setup in README.MD.'
+}
+
+$nodeVersionText = & $node --version
+if ($LASTEXITCODE -ne 0) { throw 'Cannot read the Node.js version.' }
+$nodeVersion = [version] $nodeVersionText.Trim().TrimStart('v')
+if ($nodeVersion.Major -ne 24 -or $nodeVersion -lt [version] '24.19.0') {
+  throw "Node.js 24 LTS (24.19.0 or newer in 24.x) is required; found $nodeVersion. Fix the Node.js PATH entry using README.MD."
 }
 
 Push-Location $repoRoot
@@ -31,6 +38,8 @@ try {
       if (-not (Test-Path -LiteralPath 'node_modules\playwright\cli.js')) {
         throw 'Install project dependencies first with npm ci.'
       }
+      & $node --test 'scripts/verify-live.test.mjs'
+      if ($LASTEXITCODE -ne 0) { throw "Live checker tests failed with exit code $LASTEXITCODE." }
       $testTemp = Join-Path $repoRoot '.playwright-tmp'
       New-Item -ItemType Directory -Force -Path $testTemp | Out-Null
       $env:TEMP = $testTemp
@@ -57,6 +66,10 @@ try {
     }
     'size' {
       & $node 'scripts\size.mjs' @TaskArgs
+      $nativeExitCode = $LASTEXITCODE
+    }
+    'verify' {
+      & $node 'scripts\verify-live.mjs' @TaskArgs
       $nativeExitCode = $LASTEXITCODE
     }
   }

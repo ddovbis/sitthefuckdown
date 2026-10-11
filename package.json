@@ -4,11 +4,18 @@
   "private": true,
   "description": "STFD — Sit the Fuck Down. A multilingual static bathroom manifesto.",
   "type": "module",
+  "packageManager": "npm@11.21.0",
+  "engines": {
+    "node": ">=24.19.0 <25",
+    "npm": "11.21.0"
+  },
   "scripts": {
     "start": "node scripts/serve.mjs --host 0.0.0.0 --port 8123",
-    "test": "playwright test",
+    "test": "node --test scripts/verify-live.test.mjs && playwright test",
+    "test:checks": "node --test scripts/verify-live.test.mjs",
     "qr": "node scripts/generate-qr.mjs",
-    "size": "node scripts/size.mjs"
+    "size": "node scripts/size.mjs",
+    "verify:live": "node scripts/verify-live.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.0",

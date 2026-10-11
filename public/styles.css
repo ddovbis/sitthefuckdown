@@ -176,7 +176,7 @@ h1 {
   margin-top: 8px;
 }
 
-.card, .facts, .quote {
+.card, .facts, .quote, .last-argument {
   background: var(--card);
   border: 1px solid rgba(255,255,255,.14);
   border-radius: 30px;
@@ -210,6 +210,61 @@ h1 {
   background: rgba(255,255,255,.075);
   border-radius: 18px;
   padding: 14px;
+}
+
+.last-argument {
+  margin: 16px 0;
+  padding: 26px;
+}
+
+.last-argument h2 {
+  margin: 0 0 24px;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+.last-argument-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  align-items: center;
+  gap: 28px;
+}
+
+.last-argument-copy p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.58;
+}
+
+.last-argument-copy .last-lead {
+  color: var(--ink);
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.last-argument-copy .last-close {
+  margin-bottom: 0;
+  color: var(--mint);
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.last-argument-figure { margin: 0; min-width: 0; }
+.last-argument-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 20px;
+}
+.last-argument-figure figcaption {
+  margin-top: 12px;
+  color: var(--muted);
+  text-align: center;
+  font-size: .95rem;
 }
 
 .quote {
@@ -246,7 +301,9 @@ footer {
 @media (max-width: 800px) {
   .cards, .facts ul { grid-template-columns: 1fr; }
   .card { min-height: auto; }
-  .facts, .quote, .card { border-radius: 24px; }
+  .facts, .quote, .card, .last-argument { border-radius: 24px; }
+  .last-argument { padding: 20px; }
+  .last-argument-content { grid-template-columns: 1fr; gap: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

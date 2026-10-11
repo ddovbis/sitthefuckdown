@@ -22,6 +22,14 @@ const translations = {
     fact3: 'Less noise at night.',
     fact4: 'More relaxed posture.',
     fact5: 'Zero masculinity lost. We checked.',
+    lastTitle: '…And if that’s not enough',
+    lastLead: 'Your aim can be perfect. The water still splashes.',
+    lastBody: 'When pee hits the water, droplets can splash back onto the underside of the seat. Out of sight. Still someone’s problem.',
+    lastCleanup: 'Someone has to lift that seat and scrub it off. Not exactly the highlight of their day.',
+    lastAppeal: 'If nothing else convinced you, think of the person cleaning it.',
+    lastClose: 'Be fucking civil. Sit the fuck down.',
+    lastCaption: 'Great aim. Still a mess.',
+    lastImageAlt: 'Toilet cutaway showing a stream through the opening, with droplets beneath the seat magnified.',
     qrTitle: 'Print the QR. Begin the reform.',
     qrText: 'Tape this near the throne. Technology, finally doing important work.',
     qrDownload: 'Download QR code',
@@ -71,6 +79,14 @@ const translations = {
     fact3: 'Mai puțin zgomot noaptea.',
     fact4: 'Mai puțin efort.',
     fact5: 'Masculinitate pierdută: zero.',
+    lastTitle: '…Și dacă nici asta nu ajunge',
+    lastLead: 'Poți să țintești perfect. Apa tot stropește.',
+    lastBody: 'Când jetul lovește apa, stropii pot ricoșa pe partea de dedesubt a colacului. Nu-i vezi. Tot cineva trebuie să se ocupe de ei.',
+    lastCleanup: 'Cineva trebuie să ridice colacul și să frece mizeria. Nu tocmai momentul preferat al zilei.',
+    lastAppeal: 'Dacă nimic altceva nu te-a convins, gândește-te la omul care curăță după tine.',
+    lastClose: 'Fii civilizat, naibii. Așază-te, naibii.',
+    lastCaption: 'Țintă bună. Tot mizerie.',
+    lastImageAlt: 'Secțiune printr-un vas de toaletă: jetul trece prin deschidere, iar stropii de sub colac sunt măriți.',
     qrTitle: 'Printează QR-ul. Pornește reforma.',
     qrText: 'Lipește-l lângă tron. În sfârșit, tehnologia face ceva util.',
     qrDownload: 'Descarcă QR-ul',
@@ -120,6 +136,14 @@ const translations = {
     fact3: 'Ночью тише.',
     fact4: 'Уборки меньше.',
     fact5: 'Эго на месте.',
+    lastTitle: '…И если этого мало',
+    lastLead: 'Можешь целиться идеально. Вода всё равно разбрызгивается.',
+    lastBody: 'Когда струя попадает в воду, брызги могут лететь на нижнюю сторону сиденья. Их не видно. Но кому-то всё равно придётся убирать.',
+    lastCleanup: 'Кому-то нужно поднять сиденье и оттирать это. Так себе занятие дня.',
+    lastAppeal: 'Если ничто другое тебя не убедило, подумай о том, кому это убирать.',
+    lastClose: 'Будь, блядь, человеком. Сядь, нахуй.',
+    lastCaption: 'Меткость отличная. Бардак на месте.',
+    lastImageAlt: 'Разрез унитаза: струя проходит через отверстие, а брызги под сиденьем показаны крупным планом.',
     qrTitle: 'Распечатай QR. Запусти реформу.',
     qrText: 'Повесь рядом с унитазом. Пусть технологии наконец делают что-то полезное.',
     qrDownload: 'Скачать QR-код',
@@ -169,6 +193,14 @@ const translations = {
     fact3: 'Halkabb éjszaka.',
     fact4: 'Kevesebb erőlködés.',
     fact5: 'A férfiasságod megmarad.',
+    lastTitle: '…És ha ez sem elég',
+    lastLead: 'Lehet tökéletes a célzásod. A víz akkor is fröccsen.',
+    lastBody: 'Amikor a sugár a vízbe csapódik, cseppek fröccsenhetnek az ülőke aljára. Nem látod őket. Attól még valakinek fel kell takarítania.',
+    lastCleanup: 'Valakinek fel kell hajtania az ülőkét, és le kell súrolnia. Nem éppen a nap fénypontja.',
+    lastAppeal: 'Ha más nem győzött meg, gondolj arra, aki utánad takarít.',
+    lastClose: 'Legyél, a francba, civilizált. Ülj le a francba.',
+    lastCaption: 'Szép célzás. Mégis tiszta káosz.',
+    lastImageAlt: 'A vécé metszete: a sugár a nyíláson át halad, az ülőke alatti cseppek pedig nagyítva látszanak.',
     qrTitle: 'Nyomtasd ki a QR-t. Jöhet a reform.',
     qrText: 'Ragaszd a trón mellé. Végre technológia egy valódi problémára.',
     qrDownload: 'QR-kód letöltése',
@@ -232,6 +264,11 @@ function applyLanguage() {
   document.querySelectorAll('[data-i18n]').forEach((node) => {
     const key = node.dataset.i18n;
     if (copy[key]) node.textContent = copy[key];
+  });
+
+  document.querySelectorAll('[data-i18n-alt]').forEach((node) => {
+    const key = node.dataset.i18nAlt;
+    if (copy[key]) node.alt = copy[key];
   });
 
   languageCode.textContent = copy.languageCode;

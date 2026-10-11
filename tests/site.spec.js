@@ -4,6 +4,7 @@ import jsQR from 'jsqr';
 import { mkdir, mkdtemp, writeFile, symlink, unlink, rmdir, rm } from 'node:fs/promises';
 import { basename, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { siteConfig } from '../scripts/site-config.mjs';
 
 const languages = {
   en: { code: 'EN', cta: 'I accept the throne', done: 'Pledge accepted ✅' },
@@ -29,6 +30,10 @@ for (const [lang, copy] of Object.entries(languages)) {
       const value = translations[currentLang][node.dataset.i18n];
       return typeof value === 'string' && node.textContent === value;
     }))).toBe(true);
+    const illustration = page.locator('.last-argument img');
+    await illustration.scrollIntoViewIfNeeded();
+    await expect.poll(() => illustration.evaluate(image => image.naturalWidth)).toBeGreaterThan(0);
+    await expect(illustration).toHaveAttribute('alt', await page.evaluate(() => translations[currentLang].lastImageAlt));
     await page.locator('#pledge').click();
     await expect(page.locator('#pledge')).toHaveText(copy.done);
     expect(await page.evaluate(() => translations[currentLang].pledges.includes(document.querySelector('#microcopy').textContent))).toBe(true);
@@ -103,7 +108,7 @@ test('QR image downloads and PNG/SVG encode the live site', async ({ page, reque
   const response = await request.get('/stfd-qr.png');
   expect(response.ok()).toBe(true);
   const png = PNG.sync.read(await response.body());
-  expect(jsQR(new Uint8ClampedArray(png.data), png.width, png.height)?.data).toBe('https://sitthefuckdown.com/');
+  expect(jsQR(new Uint8ClampedArray(png.data), png.width, png.height)?.data).toBe(siteConfig.url);
   const svgPixels = await page.evaluate(async () => {
     const image = new Image();
     image.src = './stfd-qr.svg';
@@ -116,17 +121,18 @@ test('QR image downloads and PNG/SVG encode the live site', async ({ page, reque
     context.drawImage(image, 0, 0, 740, 740);
     return Array.from(context.getImageData(0, 0, 740, 740).data);
   });
-  expect(jsQR(new Uint8ClampedArray(svgPixels), 740, 740)?.data).toBe('https://sitthefuckdown.com/');
+  expect(jsQR(new Uint8ClampedArray(svgPixels), 740, 740)?.data).toBe(siteConfig.url);
 });
 
 test('only deployment files are served', async ({ request }) => {
-  for (const asset of ['/', '/script.js', '/styles.css', '/favicon.svg', '/stfd-qr.png', '/stfd-qr.svg']) {
+  for (const asset of ['/', '/script.js', '/styles.css', '/favicon.svg', '/stfd-qr.png', '/stfd-qr.svg', '/splashback-600.webp', '/splashback-1200.webp']) {
     expect((await request.get(asset)).status()).toBe(200);
   }
   const favicon = await request.get('/favicon.svg');
   expect(favicon.headers()['content-type']).toContain('image/svg+xml');
   expect(await favicon.text()).toContain('🚽');
-  for (const privatePath of ['/.git/config', '/README.MD', '/package.json', '/tests/site.spec.js']) {
+  expect((await request.get('/splashback-1200.webp')).headers()['content-type']).toBe('image/webp');
+  for (const privatePath of ['/.git/config', '/README.MD', '/package.json', '/tests/site.spec.js', '/config/site.json', '/docs/domain.md']) {
     expect((await request.get(privatePath)).status()).toBe(404);
   }
 });
@@ -193,6 +199,9 @@ test('works under a project-site subpath', async ({ page }) => {
   page.on('response', response => { if (response.status() >= 400) failures.push(response.url()); });
   await page.goto('/stfd/?lang=hu');
   await expect(page.locator('#pledge')).toHaveText(languages.hu.cta);
+  const illustration = page.locator('.last-argument img');
+  await illustration.scrollIntoViewIfNeeded();
+  await expect.poll(() => illustration.evaluate(image => image.naturalWidth)).toBeGreaterThan(0);
   await expect(page.locator('.qr-frame img')).toBeVisible();
   expect(await page.locator('.qr-frame img').evaluate(image => image.naturalWidth > 0)).toBe(true);
   expect(await page.locator('link[rel="icon"]').evaluate(async link => {
