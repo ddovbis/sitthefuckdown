@@ -136,6 +136,7 @@ h1 {
   font-size: clamp(1.2rem, 3.6vw, 2rem);
   font-weight: 650;
   max-width: 720px;
+  text-wrap: balance;
 }
 
 .cta, .ghost {
@@ -457,7 +458,8 @@ footer {
   letter-spacing: -0.012em;
   word-spacing: 0.08em;
   font-size: clamp(1.8rem, 5vw, 3.4rem);
-  line-height: .95;
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
 .qr-card p {
@@ -553,4 +555,12 @@ footer {
     width: min(248px, 100%);
     transform: rotate(0deg);
   }
+
+  .qr-downloads {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .quote { padding: 24px 20px; }
 }
