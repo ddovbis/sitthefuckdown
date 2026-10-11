@@ -1,5 +1,5 @@
 param(
-  [ValidateSet('start', 'test', 'qr', 'size', 'verify')]
+  [ValidateSet('start', 'test', 'qr', 'size', 'verify', 'export')]
   [string] $Task = 'start',
   [Parameter(ValueFromRemainingArguments = $true)]
   [string[]] $TaskArgs = @()
@@ -70,6 +70,10 @@ try {
     }
     'verify' {
       & $node 'scripts\verify-live.mjs' @TaskArgs
+      $nativeExitCode = $LASTEXITCODE
+    }
+    'export' {
+      & $node 'scripts\export-release.mjs' @TaskArgs
       $nativeExitCode = $LASTEXITCODE
     }
   }

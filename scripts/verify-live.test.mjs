@@ -1,10 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import QRCode from 'qrcode';
 import { verifyLive } from './verify-live.mjs';
+import { exportRelease } from './export-release.mjs';
 
 const site = { url: 'https://example.com/', legacyUrls: ['https://example.github.io/site/'] };
 const png = await QRCode.toBuffer(site.url, { width: 200 });
@@ -95,4 +98,22 @@ test('DNS checks are opt-in and compare complete record sets', async () => {
   const failure = await verifyLive({ site, checkDns: true, request: requestFor(), resolveRecords: resolver });
   assert.equal(failure.ok, false);
   assert.match(failure.checks.find(check => check.target.endsWith('AAAA')).error, /Expected/);
+});
+
+test('export uses committed blob bytes, only public files, and refuses overwrites', async () => {
+  const temporary = await mkdtemp(join(tmpdir(), 'stfd-export-check-'));
+  const output = join(temporary, 'release');
+  const repository = fileURLToPath(new URL('../', import.meta.url));
+  try {
+    const result = await exportRelease({ ref: 'HEAD', output });
+    const expected = execFileSync('git', ['show', `${result.commit}:public/favicon.svg`], { cwd: repository });
+    assert.deepEqual(await readFile(join(result.publicDir, 'favicon.svg')), expected);
+    assert.match(result.commit, /^[a-f0-9]{40}$/);
+    const manifest = JSON.parse(await readFile(join(output, 'release.json'), 'utf8'));
+    assert.equal(manifest.commit, result.commit);
+    assert.equal(manifest.files.length, result.files);
+    await assert.rejects(readFile(join(output, 'package.json')), { code: 'ENOENT' });
+    await assert.rejects(exportRelease({ output }), /already exists/);
+    assert.deepEqual(await readFile(join(result.publicDir, 'favicon.svg')), expected);
+  } finally { await rm(temporary, { recursive: true, force: true }); }
 });

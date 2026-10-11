@@ -52,6 +52,7 @@ Useful commands:
 npm run qr
 npm run qr -- https://example.com/ # optional one-off destination override
 npm run size
+npm run export:release -- --ref HEAD --output outputs/release
 npm run verify:live -- --expected-dir outputs/release/public --output outputs/live-checks.json
 npm run verify:live -- --dns --expected-dir outputs/release/public
 ```
@@ -61,6 +62,12 @@ The canonical site URL and legacy hosting URLs live in
 default and regenerates both assets. Its optional URL argument overrides the
 destination for that run. Previously printed codes keep their original
 destination.
+
+`npm run export:release` exports committed `public/` bytes using local Git,
+including a commit/hash manifest. Choose a new output directory for each export.
+This avoids Windows checkout line-ending conversion; an ordinary checkout may
+not match the bytes deployed by Linux CI. On Windows, use
+`.\scripts\run.ps1 export` with the same arguments.
 
 `npm run verify:live` checks the live site. Pass `--expected-dir` with the
 `public/` directory from the release being checked; it compares the deployed QR

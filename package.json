@@ -10,6 +10,7 @@
     "npm": "11.21.0"
   },
   "scripts": {
+    "export:release": "node scripts/export-release.mjs",
     "start": "node scripts/serve.mjs --host 0.0.0.0 --port 8123",
     "test": "node --test scripts/verify-live.test.mjs && playwright test",
     "test:checks": "node --test scripts/verify-live.test.mjs",

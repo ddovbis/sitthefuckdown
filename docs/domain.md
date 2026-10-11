@@ -43,14 +43,17 @@ GitHub Actions is the Pages source, so this project does not need a `CNAME` file
    assets with `npm run qr`, and update site links or redirect expectations.
    Previously printed QR codes retain their encoded URL.
 6. Run `npm ci`, `npm test`, and deploy the reviewed commit. Then verify the
-   live host against that release's `public/` directory:
+   live host against that release's committed `public/` bytes:
 
    ```sh
+   npm run export:release -- --ref HEAD --output outputs/release
    npm run verify:live -- --expected-dir outputs/release/public --output outputs/live-checks.json
    npm run verify:live -- --dns --expected-dir outputs/release/public
    ```
 
-   Keep generated reports in ignored `outputs/`. The checker is read-only.
+   Export the exact deployed commit; use a new output directory each time.
+   Checkout files can have different line endings on Windows. Keep snapshots
+   and reports in ignored `outputs/`. The checker is read-only.
 
 If a backend is added later, choose its host before publishing DNS changes. An
 `api` subdomain can point to that backend while GitHub Pages continues serving
