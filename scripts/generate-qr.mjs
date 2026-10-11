@@ -2,7 +2,7 @@ import QRCode from 'qrcode';
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
-const url = new URL(process.argv[2] || 'https://ddovbis.github.io/stfd/');
+const url = new URL(process.argv[2] || 'https://sitthefuckdown.com/');
 if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Use an HTTP(S) site URL.');
 const options = { errorCorrectionLevel: 'M', margin: 4, width: 740 };
 await QRCode.toFile(fileURLToPath(new URL('../public/stfd-qr.png', import.meta.url)), url.href, options);

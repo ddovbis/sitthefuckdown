@@ -5,7 +5,7 @@ Built with plain HTML, CSS and JavaScript: no framework, backend, runtime packag
 external fonts, analytics, or build step.
 
 - **Repository:** https://github.com/ddovbis/stfd (public)
-- **Website:** https://ddovbis.github.io/stfd/
+- **Website:** https://sitthefuckdown.com/
 - **Server preview:** http://168.119.226.28:8123/
 - **Windows checkout:** `C:\Users\ddovbis\projects\web\stfd`
 - **VPS checkout:** `/home/ddovbis/projects/web/stfd`
@@ -16,7 +16,7 @@ external fonts, analytics, or build step.
 - Responsive layout, including narrow 320px screens.
 - Language picker with saved preference and `?lang=en|ro|ru|hu` overrides.
 - Interactive pledge button and rotating localized slogans.
-- Downloadable PNG and SVG QR assets pointing to the permanent GitHub Pages URL.
+- Downloadable PNG and SVG QR assets pointing to the permanent website URL.
 - CSS reduced-motion support; native emoji appearance depends on the device.
 - Language switching still works when browser storage is blocked (without persistence).
 
@@ -102,7 +102,7 @@ private-file and symlink exclusion, and project-site subpath compatibility.
 
 ```bash
 npm ci
-npm run qr -- https://ddovbis.github.io/stfd/
+npm run qr -- https://sitthefuckdown.com/
 ```
 
 The argument is the destination embedded in **both** assets. After changing the
@@ -122,7 +122,7 @@ Windows CRLF line endings can make the local checkout slightly larger.
 
 ## GitHub Pages deployment
 
-**Website:** https://ddovbis.github.io/stfd/
+**Website:** https://sitthefuckdown.com/
 
 The repository is public because the current GitHub Free plan does not support
 Pages hosting from a private repository. Only `public/` is published as the website;
@@ -135,7 +135,7 @@ built-in workflow token; no manually stored deployment credentials are needed.
 
 All asset references are relative, and `/stfd/` subpath behavior is tested.
 There is no website build step. Pages settings use **GitHub Actions** as the source.
-Both QR assets encode `https://ddovbis.github.io/stfd/`.
+Both QR assets encode `https://sitthefuckdown.com/`.
 
 ### Release workflow
 
