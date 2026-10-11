@@ -21,7 +21,8 @@ for (const [lang, copy] of Object.entries(languages)) {
     await expect(page.locator('html')).toHaveAttribute('lang', lang);
     await expect(page.locator('h1')).toHaveText('Sit the Fuck Down');
     await expect(page.locator('.contribution a')).toHaveAttribute('href', 'https://github.com/ddovbis/sitthefuckdown');
-    await expect(page.locator('.contribution a')).toHaveAccessibleName('ddovbis/sitthefuckdown');
+    await expect(page.locator('.contribution a')).toHaveAccessibleName('GitHub');
+    await expect(page.locator('body')).not.toContainText('ddovbis');
     await expect(page.locator('#language-code')).toHaveText(copy.code);
     await expect(page.locator('.language-options [data-lang] span')).toHaveText(['EN', 'RO', 'RU', 'HU']);
     await expect(page.locator('#language-toggle')).toHaveAttribute('aria-label', await page.evaluate(() => translations[currentLang].languageToggleLabel));
