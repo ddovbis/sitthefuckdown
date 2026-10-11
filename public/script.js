@@ -295,6 +295,18 @@ function quoted(text) {
   return `“${text}”`;
 }
 
+function setUnbrokenHyphenatedText(node, text) {
+  // Keep words such as “Așază-te” and “QR-код” intact without changing the copy.
+  const parts = text.split(/([^\s]+-[^\s]+)/u);
+  node.replaceChildren(...parts.map((part, index) => {
+    if (index % 2 === 0) return document.createTextNode(part);
+    const word = document.createElement('span');
+    word.className = 'unbroken-word';
+    word.textContent = part;
+    return word;
+  }));
+}
+
 function applyLanguage() {
   const copy = t();
   document.documentElement.lang = copy.lang;
@@ -302,7 +314,9 @@ function applyLanguage() {
 
   document.querySelectorAll('[data-i18n]').forEach((node) => {
     const key = node.dataset.i18n;
-    if (copy[key]) node.textContent = copy[key];
+    if (!copy[key]) return;
+    if (key === 'qrTitle' || key === 'medical') setUnbrokenHyphenatedText(node, copy[key]);
+    else node.textContent = copy[key];
   });
 
   document.querySelectorAll('[data-i18n-alt]').forEach((node) => {
@@ -331,7 +345,7 @@ function applyLanguage() {
   pledge.textContent = pledged ? copy.pledgeDone : copy.cta;
   microcopy.textContent = pledged ? copy.pledges[0] : copy.microcopy;
   index = index % copy.slogans.length;
-  line.textContent = quoted(copy.slogans[index]);
+  setUnbrokenHyphenatedText(line, quoted(copy.slogans[index]));
 }
 
 function nextSlogan() {
@@ -343,7 +357,7 @@ function nextSlogan() {
   ], { duration: 130, easing: 'ease-out' });
 
   fadeOut.onfinish = () => {
-    line.textContent = quoted(slogans[index]);
+    setUnbrokenHyphenatedText(line, quoted(slogans[index]));
     line.animate([
       { opacity: 0, transform: 'translateY(-8px)' },
       { opacity: 1, transform: 'translateY(0)' }

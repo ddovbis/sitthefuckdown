@@ -62,6 +62,50 @@ test('owner-reviewed Romanian and Russian wording is preserved', async ({ page }
   await expect(page.locator('[data-i18n="medical"]')).toHaveText('Медицинская ремарка: если мочиться трудно, больно или слишком часто — сходи к врачу, а не к QR-коду.');
 });
 
+test('source sentence and hyphenated words stay together across responsive widths', async ({ page }) => {
+  const wordsToKeep = {
+    en: [],
+    ro: [['#line', 'Așază-te']],
+    ru: [['#qr-title', 'QR-код'], ['[data-i18n="medical"]', 'QR-коду']],
+    hu: [['[data-i18n="medical"]', 'QR-kódhoz']],
+  };
+  for (const width of [320, 390, 540, 768, 800, 801, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const lang of Object.keys(languages)) {
+      await page.goto(`/?lang=${lang}`);
+      const source = page.locator('.source-reference');
+      const geometry = await source.evaluate(node => {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        const tops = [...range.getClientRects()].filter(r => r.width > 0).map(r => r.top);
+        const box = node.getBoundingClientRect();
+        return { lineSpread: Math.max(...tops) - Math.min(...tops), left: box.left, right: box.right };
+      });
+      expect(geometry.lineSpread, `${lang} source sentence at ${width}px`).toBeLessThan(2);
+      expect(geometry.left).toBeGreaterThanOrEqual(0);
+      expect(geometry.right).toBeLessThanOrEqual(width);
+      await expect(source.locator('a')).toHaveText('GitHub');
+      for (const [selector, word] of wordsToKeep[lang]) {
+        const lineSpread = await page.locator(selector).evaluate((node, text) => {
+          const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+          let textNode;
+          while ((textNode = walker.nextNode())) {
+            const offset = textNode.textContent.indexOf(text);
+            if (offset < 0) continue;
+            const range = document.createRange();
+            range.setStart(textNode, offset);
+            range.setEnd(textNode, offset + text.length);
+            const tops = [...range.getClientRects()].map(r => r.top);
+            return Math.max(...tops) - Math.min(...tops);
+          }
+          return Infinity;
+        }, word);
+        expect(lineSpread, `${word} at ${width}px`).toBeLessThan(2);
+      }
+    }
+  }
+});
+
 test('language picker persists choice, resets pledge, and URL takes priority', async ({ page }) => {
   await page.goto('/');
   await page.locator('#pledge').click();
