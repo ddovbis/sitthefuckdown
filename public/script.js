@@ -15,7 +15,9 @@ const translations = {
     card1Title: 'No splash damage',
     card1Text: 'Your bathroom is not a Jackson Pollock installation. Aim assist: activated.',
     card2Title: 'Better chill mode',
-    card2Text: 'For men with urinary symptoms, sitting can help empty the bladder more comfortably.',
+    medicalSource1: 'Source [1]: Sitting versus standing — systematic review and meta-analysis (2014, in English)',
+    medicalSource2: 'Source [2]: NIDDK — urinary retention and infection risk (in English)',
+    card2Text: 'For men who have difficulty urinating, sitting can make it easier to empty the bladder. Less urine remains, reducing the risk of urinary tract infections and the inflammation they cause.',
     card3Icon: '🤝',
     card3Title: 'Social contract',
     card3Text: 'The next person should not need forensic footwear. Be the hero in socks.',
@@ -80,7 +82,9 @@ const translations = {
     card1Title: 'Mai puțini stropi',
     card1Text: 'Baia nu e poligon. Ia loc și lasă gresia în pace.',
     card2Title: 'Mai mult confort',
-    card2Text: 'Pentru bărbații cu simptome urinare, statul jos poate fi mai confortabil.',
+    medicalSource1: 'Sursa [1]: Urinatul așezat sau în picioare — analiză sistematică și meta-analiză (2014, în engleză)',
+    medicalSource2: 'Sursa [2]: NIDDK — retenția urinară și riscul de infecții (în engleză)',
+    card2Text: 'Pentru bărbații care urinează greu, statul jos poate ajuta vezica urinară să se golească mai bine. Rămâne mai puțină urină, ceea ce reduce riscul de infecții urinare și de inflamație cauzată de acestea.',
     card3Icon: '🤝',
     card3Title: 'Gândește-te la următorul',
     card3Text: 'Următorul n-ar trebui să facă slalom printre stropi. Șosetele merită respect.',
@@ -145,7 +149,9 @@ const translations = {
     card1Title: 'Минус брызги',
     card1Text: 'Унитаз — не тир. Сядь — меньше брызг, меньше уборки.',
     card2Title: 'Сидя бывает удобнее',
-    card2Text: 'Мужчинам с проблемами при мочеиспускании сидя может быть удобнее.',
+    medicalSource1: 'Источник [1]: Мочеиспускание сидя и стоя — систематический обзор и метаанализ (2014, на английском)',
+    medicalSource2: 'Источник [2]: NIDDK — задержка мочи и риск инфекций (на английском)',
+    card2Text: 'Мужчинам с затруднённым мочеиспусканием сидя бывает легче опорожнить мочевой пузырь. В нём остается меньше мочи, что снижает риск инфекций мочевых путей и вызванного ими воспаления.',
     card3Icon: '🤝',
     card3Title: 'Подумай о следующем',
     card3Text: 'Следующий человек пришёл в туалет, а не на место преступления. Оставь после себя сухой пол.',
@@ -210,7 +216,9 @@ const translations = {
     card1Title: 'Kevesebb fröcskölés',
     card1Text: 'A vécé nem céllövölde. Ülj le, és a padló végre kimarad a történetből.',
     card2Title: 'Kényelmesebb is lehet',
-    card2Text: 'Ha nehezen megy a pisilés, ülve kényelmesebb lehet.',
+    medicalSource1: '[1] forrás: Ülve vagy állva vizelés — szisztematikus áttekintés és metaanalízis (2014, angolul)',
+    medicalSource2: '[2] forrás: NIDDK — vizelet-visszamaradás és fertőzésveszély (angolul)',
+    card2Text: 'Vizelési nehézséggel küzdő férfiaknál ülve könnyebb lehet kiüríteni a húgyhólyagot. Kevesebb vizelet marad benne, így kisebb a húgyúti fertőzések és az általuk okozott gyulladás kockázata.',
     card3Icon: '🤝',
     card3Title: 'Gondolj a következőre',
     card3Text: 'Aki utánad jön, vécére szeretne menni, nem helyszínelni. Gondolj a zoknijára is.',
@@ -327,6 +335,10 @@ function applyLanguage() {
   document.querySelectorAll('[data-i18n-aria-label]').forEach((node) => {
     const key = node.dataset.i18nAriaLabel;
     if (copy[key]) node.setAttribute('aria-label', copy[key]);
+  });
+
+  document.querySelectorAll('[data-i18n-title]').forEach((node) => {
+    node.title = copy[node.dataset.i18nTitle];
   });
 
   languageCode.textContent = copy.languageCode;
